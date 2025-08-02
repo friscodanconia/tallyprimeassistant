@@ -26,78 +26,89 @@ export function useVoice(options: UseVoiceOptions = {}) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     
     if (SpeechRecognition) {
-      setIsSupported(true);
-      const recognition = new SpeechRecognition();
-      
-      recognition.continuous = options.continuous ?? false;
-      recognition.interimResults = options.interimResults ?? true;
-      recognition.lang = "en-US";
-      recognition.maxAlternatives = 1;
+      try {
+        setIsSupported(true);
+        const recognition = new SpeechRecognition();
+        
+        // Simple configuration without problematic settings
+        recognition.continuous = false; // Set to false for single recognition
+        recognition.interimResults = false; // Set to false for simpler handling
+        recognition.lang = "en-US";
+        
+        // Set longer timeout for speech detection
+        let speechTimeout: NodeJS.Timeout;
 
-      recognition.onstart = () => {
-        console.log("Voice recognition started - speak now!");
-        setIsListening(true);
-      };
-
-      recognition.onresult = (event: any) => {
-        console.log("Voice recognition result received:", event);
-        let finalTranscript = "";
-        let interimTranscript = "";
-
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
-          console.log(`Result ${i}: "${transcript}" (final: ${event.results[i].isFinal})`);
+        recognition.onstart = () => {
+          console.log("Voice recognition started - speak now!");
+          setIsListening(true);
           
-          if (event.results[i].isFinal) {
+          // Set a timeout to keep listening for 8 seconds
+          speechTimeout = setTimeout(() => {
+            console.log("Speech timeout reached, stopping...");
+            recognition.stop();
+          }, 8000);
+        };
+
+        recognition.onresult = (event: any) => {
+          clearTimeout(speechTimeout);
+          console.log("Voice recognition result received:", event);
+          
+          let finalTranscript = "";
+
+          for (let i = 0; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            console.log(`Result ${i}: "${transcript}" (final: ${event.results[i].isFinal})`);
             finalTranscript += transcript;
-          } else {
-            interimTranscript += transcript;
           }
-        }
 
-        const fullTranscript = finalTranscript || interimTranscript;
-        setTranscript(fullTranscript);
-        console.log("Full transcript:", fullTranscript);
+          setTranscript(finalTranscript);
+          console.log("Final transcript:", finalTranscript);
 
-        if (finalTranscript && options.onResult) {
-          console.log("Calling onResult with final transcript:", finalTranscript.trim());
-          options.onResult(finalTranscript.trim());
-        }
-      };
+          if (finalTranscript.trim() && options.onResult) {
+            console.log("Calling onResult with transcript:", finalTranscript.trim());
+            options.onResult(finalTranscript.trim());
+          }
+        };
 
-      recognition.onerror = (event: any) => {
-        console.error("Speech recognition error:", event.error, event);
-        setIsListening(false);
-        
-        let errorMessage = "Voice recognition error: ";
-        switch (event.error) {
-          case 'not-allowed':
-            errorMessage += "Microphone access denied. Please allow microphone permissions.";
-            break;
-          case 'no-speech':
-            errorMessage += "No speech detected. Please try speaking again.";
-            break;
-          case 'audio-capture':
-            errorMessage += "No microphone found. Please check your microphone.";
-            break;
-          case 'network':
-            errorMessage += "Network error. Please check your connection.";
-            break;
-          default:
-            errorMessage += event.error;
-        }
-        
-        if (options.onError) {
-          options.onError(errorMessage);
-        }
-      };
+        recognition.onerror = (event: any) => {
+          console.error("Speech recognition error:", event.error, event);
+          clearTimeout(speechTimeout);
+          setIsListening(false);
+          
+          let errorMessage = "Voice recognition error: ";
+          switch (event.error) {
+            case 'not-allowed':
+              errorMessage += "Microphone access denied. Please allow microphone permissions.";
+              break;
+            case 'no-speech':
+              errorMessage += "No speech detected. Please try speaking again.";
+              break;
+            case 'audio-capture':
+              errorMessage += "No microphone found. Please check your microphone.";
+              break;
+            case 'network':
+              errorMessage += "Network error. Please check your connection.";
+              break;
+            default:
+              errorMessage += event.error;
+          }
+          
+          if (options.onError) {
+            options.onError(errorMessage);
+          }
+        };
 
-      recognition.onend = () => {
-        console.log("Voice recognition ended");
-        setIsListening(false);
-      };
+        recognition.onend = () => {
+          console.log("Voice recognition ended");
+          clearTimeout(speechTimeout);
+          setIsListening(false);
+        };
 
-      recognitionRef.current = recognition;
+        recognitionRef.current = recognition;
+      } catch (error) {
+        console.error("Error creating speech recognition:", error);
+        setIsSupported(false);
+      }
     } else {
       setIsSupported(false);
     }
@@ -107,7 +118,7 @@ export function useVoice(options: UseVoiceOptions = {}) {
         recognitionRef.current.abort();
       }
     };
-  }, [options.continuous, options.interimResults, options.onResult, options.onError]);
+  }, [options.onResult, options.onError]);
 
   const startListening = useCallback(async () => {
     if (recognitionRef.current && !isListening) {
