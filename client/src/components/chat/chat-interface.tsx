@@ -10,25 +10,7 @@ import { Message } from "./message";
 import { VoiceInput } from "./voice-input";
 import { Message as MessageType } from "@shared/schema";
 
-// TallyPrime-specific suggested queries
-const SUGGESTED_QUERIES = [
-  "How to enable GST in TallyPrime?",
-  "What's the difference between ERP 9 and TallyPrime?",
-  "How to cancel an invoice?",
-  "Show me Balance Sheet",
-  "How to migrate from ERP 9?",
-  "Create sales voucher",
-  "Generate GST returns",
-  "How to backup data?"
-];
-
-// Quick action commands
-const QUICK_ACTIONS = [
-  { text: "Open Balance Sheet", icon: "📊", type: "action" },
-  { text: "Create Sales Invoice", icon: "🧾", type: "action" },
-  { text: "View Day Book", icon: "📖", type: "action" },
-  { text: "GST Filing Help", icon: "📋", type: "question" }
-];
+// Removed suggested queries and quick actions since they're now in the sidebar
 
 export function ChatInterface() {
   const [inputMessage, setInputMessage] = useState("");
@@ -102,23 +84,7 @@ export function ChatInterface() {
     }, 100);
   };
 
-  // Handle suggested query click
-  const handleSuggestedQuery = (query: string) => {
-    setInputMessage(query);
-    textareaRef.current?.focus();
-  };
-
-  // Handle quick action click
-  const handleQuickAction = (action: any) => {
-    if (action.type === "action") {
-      // For actions, we'll simulate them
-      sendMessageMutation.mutate(action.text);
-    } else {
-      // For questions, set as input
-      setInputMessage(action.text);
-      textareaRef.current?.focus();
-    }
-  };
+  // Removed handlers for suggested queries and quick actions since they're now in the sidebar
 
   // Handle textarea auto-resize
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -189,33 +155,23 @@ export function ChatInterface() {
                       <li>• Simulated TallyPrime actions</li>
                     </ul>
                     <p className="text-sm text-gray-600">
-                      💬 Type a question or click "Ask Question" to get started!
+                      Use the sidebar for quick actions or type your question below.
                     </p>
                   </div>
                 </div>
 
-                {/* Quick Actions */}
+                {/* Streamlined guidance */}
                 <div className="flex items-start space-x-3">
                   <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
                     <Zap className="text-white h-4 w-4" />
                   </div>
                   <div className="bg-purple-50 rounded-2xl rounded-tl-sm p-4 max-w-md border border-purple-100">
                     <div className="flex items-center mb-3">
-                      <Badge variant="secondary" className="bg-purple-100 text-purple-700">Quick Actions</Badge>
+                      <Badge variant="secondary" className="bg-purple-100 text-purple-700">Getting Started</Badge>
                     </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      {QUICK_ACTIONS.map((action) => (
-                        <button
-                          key={action.text}
-                          onClick={() => handleQuickAction(action)}
-                          className="flex items-center space-x-2 p-2 bg-white rounded-lg border border-gray-200 hover:border-purple-300 hover:bg-purple-50 transition-colors text-left"
-                          disabled={sendMessageMutation.isPending}
-                        >
-                          <span className="text-lg">{action.icon}</span>
-                          <span className="text-xs text-gray-700 font-medium">{action.text}</span>
-                        </button>
-                      ))}
-                    </div>
+                    <p className="text-sm text-gray-700">
+                      Use the sidebar to access Quick Actions and search FAQs, or simply type your question below.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -286,24 +242,7 @@ export function ChatInterface() {
           </div>
         </form>
         
-        {/* Input Suggestions */}
-        <div className="mt-3">
-          <p className="text-xs text-gray-500 mb-2">💡 Try these common TallyPrime questions:</p>
-          <div className="flex flex-wrap gap-2">
-            {SUGGESTED_QUERIES.map((query) => (
-              <Button
-                key={query}
-                variant="outline"
-                size="sm"
-                className="text-xs bg-white hover:bg-blue-50 hover:border-blue-300 transition-colors"
-                onClick={() => handleSuggestedQuery(query)}
-                disabled={sendMessageMutation.isPending}
-              >
-                {query}
-              </Button>
-            ))}
-          </div>
-        </div>
+        {/* Removed input suggestions - now handled by sidebar */}
       </div>
     </div>
   );
