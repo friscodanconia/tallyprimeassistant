@@ -63,7 +63,7 @@ export function QuickActions() {
       <CardHeader className="pb-2 pt-3 px-3">
         <CardTitle className="flex items-center text-sm">
           <Zap className="h-3 w-3 text-green-600 mr-1" />
-          Actions
+          Quick Actions
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2 px-3 pb-3">
