@@ -35,17 +35,19 @@ export function useVoice(options: UseVoiceOptions = {}) {
       recognition.maxAlternatives = 1;
 
       recognition.onstart = () => {
-        console.log("Voice recognition started");
+        console.log("Voice recognition started - speak now!");
         setIsListening(true);
       };
 
       recognition.onresult = (event: any) => {
-        console.log("Voice recognition result:", event);
+        console.log("Voice recognition result received:", event);
         let finalTranscript = "";
         let interimTranscript = "";
 
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const transcript = event.results[i][0].transcript;
+          console.log(`Result ${i}: "${transcript}" (final: ${event.results[i].isFinal})`);
+          
           if (event.results[i].isFinal) {
             finalTranscript += transcript;
           } else {
@@ -55,18 +57,38 @@ export function useVoice(options: UseVoiceOptions = {}) {
 
         const fullTranscript = finalTranscript || interimTranscript;
         setTranscript(fullTranscript);
+        console.log("Full transcript:", fullTranscript);
 
         if (finalTranscript && options.onResult) {
-          console.log("Calling onResult with:", finalTranscript);
+          console.log("Calling onResult with final transcript:", finalTranscript.trim());
           options.onResult(finalTranscript.trim());
         }
       };
 
       recognition.onerror = (event: any) => {
-        console.error("Speech recognition error:", event.error);
+        console.error("Speech recognition error:", event.error, event);
         setIsListening(false);
+        
+        let errorMessage = "Voice recognition error: ";
+        switch (event.error) {
+          case 'not-allowed':
+            errorMessage += "Microphone access denied. Please allow microphone permissions.";
+            break;
+          case 'no-speech':
+            errorMessage += "No speech detected. Please try speaking again.";
+            break;
+          case 'audio-capture':
+            errorMessage += "No microphone found. Please check your microphone.";
+            break;
+          case 'network':
+            errorMessage += "Network error. Please check your connection.";
+            break;
+          default:
+            errorMessage += event.error;
+        }
+        
         if (options.onError) {
-          options.onError(event.error);
+          options.onError(errorMessage);
         }
       };
 
@@ -87,12 +109,23 @@ export function useVoice(options: UseVoiceOptions = {}) {
     };
   }, [options.continuous, options.interimResults, options.onResult, options.onError]);
 
-  const startListening = useCallback(() => {
+  const startListening = useCallback(async () => {
     if (recognitionRef.current && !isListening) {
-      setTranscript("");
-      recognitionRef.current.start();
+      try {
+        // Request microphone permission first
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+        console.log("Microphone permission granted");
+        
+        setTranscript("");
+        recognitionRef.current.start();
+      } catch (error) {
+        console.error("Microphone permission denied or error:", error);
+        if (options.onError) {
+          options.onError("Microphone permission denied. Please allow microphone access and try again.");
+        }
+      }
     }
-  }, [isListening]);
+  }, [isListening, options]);
 
   const stopListening = useCallback(() => {
     if (recognitionRef.current && isListening) {
