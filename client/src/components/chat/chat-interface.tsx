@@ -131,7 +131,7 @@ export function ChatInterface() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 h-[calc(100vh-12rem)] flex flex-col">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 h-[calc(100vh-8rem)] flex flex-col">
       
       {/* Chat Header */}
       <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-green-50">

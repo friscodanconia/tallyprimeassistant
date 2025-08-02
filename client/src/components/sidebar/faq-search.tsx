@@ -32,7 +32,7 @@ export function FaqSearch() {
     enabled: searchQuery.length > 0,
   });
 
-  const displayItems = searchQuery ? searchResults : allFaqItems.slice(0, 4);
+  const displayItems = searchQuery ? searchResults : allFaqItems.slice(0, 3);
 
   // Send message mutation
   const sendMessageMutation = useMutation({
@@ -74,9 +74,9 @@ export function FaqSearch() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center text-lg">
-          <Search className="h-5 w-5 text-blue-600 mr-2" />
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center text-base">
+          <Search className="h-4 w-4 text-blue-600 mr-2" />
           FAQ Search
         </CardTitle>
       </CardHeader>
