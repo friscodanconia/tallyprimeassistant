@@ -5,11 +5,37 @@ interface UseSpeechOptions {
   pitch?: number;
   volume?: number;
   voice?: SpeechSynthesisVoice;
+  preferredLanguage?: string;
 }
 
 export function useSpeech(options: UseSpeechOptions = {}) {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isSupported] = useState(() => 'speechSynthesis' in window);
+
+  // Detect if text contains Hindi characters
+  const containsHindi = useCallback((text: string) => {
+    const hindiRegex = /[\u0900-\u097F]/;
+    return hindiRegex.test(text);
+  }, []);
+
+  // Find best voice for the given language
+  const findBestVoice = useCallback((language: string) => {
+    const voices = window.speechSynthesis.getVoices();
+    
+    // Priority order for Hindi voices
+    const hindiPriorities = ['hi-IN', 'hi'];
+    const englishPriorities = ['en-IN', 'en-US', 'en-GB', 'en'];
+    
+    const priorities = language === 'hi' ? hindiPriorities : englishPriorities;
+    
+    for (const priority of priorities) {
+      const voice = voices.find(v => v.lang.startsWith(priority));
+      if (voice) return voice;
+    }
+    
+    // Fallback to first voice of the language family
+    return voices.find(v => v.lang.startsWith(language.split('-')[0]));
+  }, []);
 
   const speak = useCallback((text: string) => {
     if (!isSupported) {
@@ -22,10 +48,24 @@ export function useSpeech(options: UseSpeechOptions = {}) {
 
     const utterance = new SpeechSynthesisUtterance(text);
     
-    utterance.rate = options.rate ?? 1;
+    // Auto-detect language and set appropriate voice
+    const isHindi = containsHindi(text);
+    const targetLanguage = options.preferredLanguage || (isHindi ? 'hi' : 'en');
+    
+    // Set language
+    utterance.lang = targetLanguage === 'hi' ? 'hi-IN' : 'en-IN';
+    
+    // Find and set the best voice
+    const bestVoice = findBestVoice(targetLanguage);
+    if (bestVoice) {
+      utterance.voice = bestVoice;
+    }
+    
+    utterance.rate = options.rate ?? (isHindi ? 0.8 : 1.0); // Slightly slower for Hindi
     utterance.pitch = options.pitch ?? 1;
     utterance.volume = options.volume ?? 1;
     
+    // Override with custom voice if provided
     if (options.voice) {
       utterance.voice = options.voice;
     }
@@ -44,7 +84,7 @@ export function useSpeech(options: UseSpeechOptions = {}) {
     };
 
     window.speechSynthesis.speak(utterance);
-  }, [isSupported, options.rate, options.pitch, options.volume, options.voice]);
+  }, [isSupported, options, containsHindi, findBestVoice]);
 
   const stop = useCallback(() => {
     if (isSupported) {
@@ -60,11 +100,27 @@ export function useSpeech(options: UseSpeechOptions = {}) {
     return [];
   }, [isSupported]);
 
+  const getAvailableLanguages = useCallback(() => {
+    const voices = getVoices();
+    const languages = new Set<string>();
+    
+    voices.forEach(voice => {
+      if (voice.lang.startsWith('hi')) {
+        languages.add('Hindi');
+      } else if (voice.lang.startsWith('en')) {
+        languages.add('English');
+      }
+    });
+    
+    return Array.from(languages);
+  }, [getVoices]);
+
   return {
     speak,
     stop,
     isSpeaking,
     isSupported,
     getVoices,
+    getAvailableLanguages,
   };
 }
