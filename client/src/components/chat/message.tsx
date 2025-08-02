@@ -18,14 +18,16 @@ interface MessageProps {
 
 export function Message({ message }: MessageProps) {
   const [selectedLanguage, setSelectedLanguage] = useState<string>('auto');
-  const { speak, isSpeaking, getAvailableLanguages } = useSpeech();
+  const speechOptions = {
+    preferredLanguage: selectedLanguage === 'Hindi' ? 'hi' : selectedLanguage === 'English' ? 'en' : undefined
+  };
+  const { speak, isSpeaking, getAvailableLanguages } = useSpeech(speechOptions);
   const isUser = message.role === "user";
   const metadata = message.metadata as any;
   const availableLanguages = getAvailableLanguages();
 
-  const handleSpeak = (language?: string) => {
+  const handleSpeak = () => {
     if (message.content) {
-      const preferredLang = language === 'Hindi' ? 'hi' : language === 'English' ? 'en' : undefined;
       speak(message.content);
     }
   };
@@ -125,7 +127,7 @@ export function Message({ message }: MessageProps) {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => handleSpeak(selectedLanguage)}
+                onClick={handleSpeak}
                 disabled={isSpeaking}
                 className="text-xs"
               >
