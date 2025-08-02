@@ -59,14 +59,14 @@ export function QuickActions() {
   };
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center text-base">
-          <Zap className="h-4 w-4 text-green-600 mr-2" />
-          Quick Actions
+    <Card className="text-xs">
+      <CardHeader className="pb-2 pt-3 px-3">
+        <CardTitle className="flex items-center text-sm">
+          <Zap className="h-3 w-3 text-green-600 mr-1" />
+          Actions
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2 px-3 pb-3">
         <Button
           onClick={handleSimulateVoucher}
           disabled={simulationMutation.isPending}

@@ -73,14 +73,14 @@ export function FaqSearch() {
   };
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center text-base">
-          <Search className="h-4 w-4 text-blue-600 mr-2" />
-          FAQ Search
+    <Card className="text-xs">
+      <CardHeader className="pb-2 pt-3 px-3">
+        <CardTitle className="flex items-center text-sm">
+          <Search className="h-3 w-3 text-blue-600 mr-1" />
+          FAQ
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-2 px-3 pb-3">
         <div className="relative">
           <Input
             type="text"

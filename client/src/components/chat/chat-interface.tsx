@@ -131,36 +131,28 @@ export function ChatInterface() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 h-[calc(100vh-8rem)] flex flex-col">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 h-[calc(100vh-4rem)] flex flex-col">
       
-      {/* Chat Header */}
-      <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-green-50">
+      {/* Minimal Chat Header */}
+      <div className="p-3 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-green-50">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-green-600 rounded-full flex items-center justify-center">
-              <Calculator className="text-white h-5 w-5" />
+          <div className="flex items-center space-x-2">
+            <div className="w-6 h-6 bg-gradient-to-r from-blue-600 to-green-600 rounded-full flex items-center justify-center">
+              <Calculator className="text-white h-3 w-3" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">TallyPrime AI Assistant</h2>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <p className="text-sm text-gray-600">Online • Ready to help with accounting</p>
-              </div>
+              <h2 className="text-sm font-semibold text-gray-900">AI Assistant</h2>
             </div>
+            <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Badge variant="secondary" className="bg-blue-100 text-blue-700">
-              AI Powered
-            </Badge>
-            <Button variant="ghost" size="sm" title="Export Chat">
-              <Download className="h-4 w-4" />
-            </Button>
+          <div className="flex items-center space-x-1">
             <Button 
               variant="ghost" 
               size="sm" 
               onClick={() => clearChatMutation.mutate()}
               disabled={clearChatMutation.isPending}
               title="Clear Chat"
+              className="h-6 px-2 text-xs"
             >
               Clear
             </Button>
@@ -169,7 +161,7 @@ export function ChatInterface() {
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {isLoading ? (
           <div className="flex items-center justify-center h-32">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -257,7 +249,7 @@ export function ChatInterface() {
       </div>
 
       {/* Input Area */}
-      <div className="p-6 border-t border-gray-200 bg-gray-50">
+      <div className="p-3 border-t border-gray-200 bg-gray-50">
         <form onSubmit={handleSubmit}>
           <div className="flex items-end space-x-3">
             <div className="flex-1">

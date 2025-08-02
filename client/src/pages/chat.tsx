@@ -7,28 +7,24 @@ import { QuickActions } from "@/components/sidebar/quick-actions";
 export default function ChatPage() {
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Header */}
+      {/* Compact Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Calculator className="text-white h-5 w-5" />
+          <div className="flex justify-between items-center h-12">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <Calculator className="text-white h-4 w-4" />
               </div>
               <div>
-                <h1 className="text-xl font-semibold text-gray-900">TallyPrime AI Assistant</h1>
-                <p className="text-sm text-gray-500">Your Smart Accounting Companion</p>
+                <h1 className="text-lg font-semibold text-gray-900">TallyPrime AI</h1>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm">
-                <Settings className="h-4 w-4" />
+            <div className="flex items-center space-x-2">
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <Settings className="h-3 w-3" />
               </Button>
-              <Button variant="ghost" size="sm">
-                <HelpCircle className="h-4 w-4" />
-              </Button>
-              <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
-                <User className="h-4 w-4 text-white" />
+              <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
+                <User className="h-3 w-3 text-white" />
               </div>
             </div>
           </div>
@@ -36,19 +32,19 @@ export default function ChatPage() {
       </header>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 xl:grid-cols-5 lg:grid-cols-3 gap-6 h-[calc(100vh-8rem)]">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-2">
+        <div className="grid grid-cols-1 xl:grid-cols-6 lg:grid-cols-4 gap-3 h-[calc(100vh-4rem)]">
           
-          {/* Sidebar - Smaller on large screens, hidden on mobile */}
-          <div className="xl:col-span-1 lg:col-span-1 hidden lg:block space-y-6 overflow-hidden">
-            <div className="space-y-4 overflow-y-auto h-full">
+          {/* Compact Sidebar */}
+          <div className="xl:col-span-1 lg:col-span-1 hidden lg:block overflow-hidden">
+            <div className="space-y-2 overflow-y-auto h-full">
               <FaqSearch />
               <QuickActions />
             </div>
           </div>
           
-          {/* Chat Interface - Takes most of the space */}
-          <div className="xl:col-span-4 lg:col-span-2 col-span-1 min-w-0">
+          {/* Chat Interface - Maximum space */}
+          <div className="xl:col-span-5 lg:col-span-3 col-span-1 min-w-0">
             <ChatInterface />
           </div>
         </div>
