@@ -212,8 +212,8 @@ export function ChatInterface() {
               <div className="relative">
                 <Textarea
                   ref={textareaRef}
-                  placeholder="Ask me anything about TallyPrime... (e.g., 'How to enable GST?' or 'Show balance sheet')"
-                  className="resize-none pr-20 max-h-32 bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  placeholder="Type your TallyPrime question here and press Enter to send..."
+                  className="resize-none pr-12 max-h-32 bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                   rows={1}
                   value={inputMessage}
                   onChange={handleTextareaChange}
@@ -225,17 +225,8 @@ export function ChatInterface() {
                   }}
                 />
                 
-                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
+                <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
                   <VoiceInput onTranscript={handleVoiceTranscript} />
-                  
-                  <Button
-                    type="submit"
-                    size="sm"
-                    disabled={!inputMessage.trim() || sendMessageMutation.isPending}
-                    className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white"
-                  >
-                    <Send className="h-4 w-4" />
-                  </Button>
                 </div>
               </div>
             </div>
