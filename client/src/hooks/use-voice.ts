@@ -44,55 +44,65 @@ export function useVoice(options: UseVoiceOptions = {}) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       const recognition = new SpeechRecognition();
 
-      // Configure recognition with more permissive settings
-      recognition.continuous = true;
-      recognition.interimResults = true;
+      // Configure recognition with Chrome-optimized settings
+      recognition.continuous = false;  // Single utterance mode
+      recognition.interimResults = false;  // Final results only
       recognition.lang = "en-US";
-      recognition.maxAlternatives = 3;
+      recognition.maxAlternatives = 1;
+      
+      // Add service hints for better recognition
+      if ('serviceURI' in recognition) {
+        recognition.serviceURI = 'wss://www.google.com/speech-api/full-duplex/v1/down?key=';
+      }
 
       let finalTranscript = "";
       let hasResult = false;
 
       recognition.onstart = () => {
-        console.log("Voice recognition started - speak now!");
+        console.log("Voice recognition started - speak now! (Say something clearly)");
         setIsListening(true);
         
-        // Set timeout to stop listening after 10 seconds
+        // Shorter timeout for single utterance
         timeoutRef.current = setTimeout(() => {
-          console.log("Voice recognition timeout");
+          console.log("Voice recognition timeout - stopping");
           recognition.stop();
-        }, 10000);
+        }, 15000);
+        
+        // Force a brief delay to ensure mic is ready
+        setTimeout(() => {
+          console.log("Microphone should be active now - please speak");
+        }, 500);
       };
 
       recognition.onresult = (event: any) => {
-        console.log("Voice recognition result received:", event);
+        console.log("🎤 SPEECH DETECTED! Processing results...", event);
         hasResult = true;
         
-        let interimTranscript = "";
-        finalTranscript = "";
+        let bestTranscript = "";
+        let confidence = 0;
 
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
-          
-          if (event.results[i].isFinal) {
-            finalTranscript += transcript;
-            console.log("Final result:", transcript);
-          } else {
-            interimTranscript += transcript;
-            console.log("Interim result:", transcript);
+        // Get the best result from all alternatives
+        for (let i = 0; i < event.results.length; i++) {
+          const result = event.results[i];
+          for (let j = 0; j < result.length; j++) {
+            const alternative = result[j];
+            console.log(`Alternative ${j}: "${alternative.transcript}" (confidence: ${alternative.confidence})`);
+            
+            if (alternative.confidence > confidence || j === 0) {
+              bestTranscript = alternative.transcript;
+              confidence = alternative.confidence;
+            }
           }
         }
 
-        const currentTranscript = finalTranscript || interimTranscript;
-        setTranscript(currentTranscript);
+        console.log(`✅ Best transcript: "${bestTranscript}" (confidence: ${confidence})`);
+        setTranscript(bestTranscript);
 
-        // If we have a final result, process it and stop
-        if (finalTranscript.trim()) {
-          console.log("Processing final transcript:", finalTranscript.trim());
+        if (bestTranscript.trim()) {
+          console.log("🚀 Sending result to callback:", bestTranscript.trim());
           if (options.onResult) {
-            options.onResult(finalTranscript.trim());
+            options.onResult(bestTranscript.trim());
           }
-          recognition.stop();
         }
       };
 
