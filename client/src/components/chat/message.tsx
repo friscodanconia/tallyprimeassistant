@@ -1,33 +1,18 @@
-import { useState } from "react";
 import { Message as MessageType } from "@shared/schema";
-import { Bot, User, FileText, Play, AlertTriangle, ChevronDown } from "lucide-react";
+import { Bot, User, FileText, Play, AlertTriangle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useSpeech } from "@/hooks/use-speech";
 import { cn } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 interface MessageProps {
   message: MessageType;
 }
 
 export function Message({ message }: MessageProps) {
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('auto');
-  
-  // Create speech options based on selected language
-  const speechOptions = selectedLanguage === 'auto' ? {} : {
-    preferredLanguage: selectedLanguage === 'Hindi' ? 'hi' : 'en'
-  };
-  
-  const { speak, isSpeaking, getAvailableLanguages } = useSpeech(speechOptions);
+  const { speak, isSpeaking } = useSpeech();
   const isUser = message.role === "user";
   const metadata = message.metadata as any;
-  const availableLanguages = getAvailableLanguages();
 
   const handleSpeak = () => {
     if (message.content) {
@@ -126,46 +111,16 @@ export function Message({ message }: MessageProps) {
         
         {!isUser && (
           <div className="flex items-center justify-between mt-3 pt-2 border-t border-gray-200">
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleSpeak}
-                disabled={isSpeaking}
-                className="text-xs"
-              >
-                <span className="mr-1">🔊</span>
-                {isSpeaking ? "Speaking..." : "Read aloud"}
-              </Button>
-              
-              {availableLanguages.length > 1 && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="text-xs px-2">
-                      {selectedLanguage === 'auto' ? 'Auto' : selectedLanguage}
-                      <ChevronDown className="h-3 w-3 ml-1" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="w-32">
-                    <DropdownMenuItem 
-                      onClick={() => setSelectedLanguage('auto')}
-                      className={selectedLanguage === 'auto' ? 'bg-blue-50' : ''}
-                    >
-                      Auto Detect
-                    </DropdownMenuItem>
-                    {availableLanguages.map((language) => (
-                      <DropdownMenuItem 
-                        key={language}
-                        onClick={() => setSelectedLanguage(language)}
-                        className={selectedLanguage === language ? 'bg-blue-50' : ''}
-                      >
-                        {language}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
-            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleSpeak}
+              disabled={isSpeaking}
+              className="text-xs"
+            >
+              <span className="mr-1">🔊</span>
+              {isSpeaking ? "Speaking..." : "Read aloud"}
+            </Button>
             
             <span className="text-xs text-gray-500">
               {new Date(message.createdAt!).toLocaleTimeString()}
