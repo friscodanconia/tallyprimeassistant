@@ -16,7 +16,7 @@ Preferred communication style: Simple, everyday language.
 - **Styling**: Tailwind CSS with custom design tokens for TallyPrime branding
 - **State Management**: TanStack Query (React Query) for server state management
 - **Routing**: Wouter for lightweight client-side routing
-- **Voice Features**: Built-in speech recognition and synthesis APIs for voice input/output
+- **Voice Features**: Text-to-speech output for AI responses (voice input removed due to browser compatibility issues)
 
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js framework
