@@ -1,0 +1,107 @@
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Search, FileText, BarChart3, Receipt, Database } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FaqItem } from "@shared/schema";
+
+const CATEGORY_ICONS = {
+  "GST": FileText,
+  "Financial Reports": BarChart3,
+  "Invoice Management": Receipt,
+  "Data Management": Database,
+  "Company Management": FileText,
+};
+
+export function FaqSearch() {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Fetch all FAQ items
+  const { data: allFaqItems = [] } = useQuery<FaqItem[]>({
+    queryKey: ["/api/faq"],
+  });
+
+  // Search FAQ items
+  const { data: searchResults = [] } = useQuery<FaqItem[]>({
+    queryKey: ["/api/faq/search", searchQuery],
+    enabled: searchQuery.length > 0,
+  });
+
+  const displayItems = searchQuery ? searchResults : allFaqItems.slice(0, 4);
+
+  const getIconForCategory = (category: string) => {
+    const IconComponent = CATEGORY_ICONS[category as keyof typeof CATEGORY_ICONS] || FileText;
+    return <IconComponent className="h-4 w-4" />;
+  };
+
+  const getColorForCategory = (category: string) => {
+    const colors = {
+      "GST": "text-green-600",
+      "Financial Reports": "text-blue-600", 
+      "Invoice Management": "text-green-600",
+      "Data Management": "text-blue-600",
+      "Company Management": "text-green-600",
+    };
+    return colors[category as keyof typeof colors] || "text-blue-600";
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center text-lg">
+          <Search className="h-5 w-5 text-blue-600 mr-2" />
+          FAQ Search
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="relative">
+          <Input
+            type="text"
+            placeholder="Search TallyPrime topics..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+        </div>
+        
+        <div className="space-y-2">
+          <h4 className="text-sm font-medium text-gray-700 mb-2">
+            {searchQuery ? "Search Results" : "Popular Topics"}
+          </h4>
+          
+          {displayItems.length === 0 ? (
+            <p className="text-sm text-gray-500 text-center py-4">
+              {searchQuery ? "No results found" : "Loading topics..."}
+            </p>
+          ) : (
+            displayItems.map((item) => (
+              <Button
+                key={item.id}
+                variant="ghost"
+                className="w-full justify-start p-3 h-auto bg-gray-50 hover:bg-gray-100 transition-colors"
+                onClick={() => {
+                  // You could implement a feature to insert this FAQ question into the chat
+                  console.log("FAQ item clicked:", item);
+                }}
+              >
+                <span className={`mr-2 ${getColorForCategory(item.category)}`}>
+                  {getIconForCategory(item.category)}
+                </span>
+                <div className="text-left">
+                  <div className="text-sm font-medium truncate">
+                    {item.question}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    {item.category}
+                  </div>
+                </div>
+              </Button>
+            ))
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
