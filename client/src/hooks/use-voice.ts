@@ -1,5 +1,13 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 
+// Declare global types for Speech Recognition
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+
 interface UseVoiceOptions {
   onResult?: (transcript: string) => void;
   onError?: (error: string) => void;
@@ -11,7 +19,7 @@ export function useVoice(options: UseVoiceOptions = {}) {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [isSupported, setIsSupported] = useState(false);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
     // Check if Speech Recognition is supported
@@ -21,15 +29,18 @@ export function useVoice(options: UseVoiceOptions = {}) {
       setIsSupported(true);
       const recognition = new SpeechRecognition();
       
-      recognition.continuous = options.continuous ?? true;
+      recognition.continuous = options.continuous ?? false;
       recognition.interimResults = options.interimResults ?? true;
       recognition.lang = "en-US";
+      recognition.maxAlternatives = 1;
 
       recognition.onstart = () => {
+        console.log("Voice recognition started");
         setIsListening(true);
       };
 
-      recognition.onresult = (event) => {
+      recognition.onresult = (event: any) => {
+        console.log("Voice recognition result:", event);
         let finalTranscript = "";
         let interimTranscript = "";
 
@@ -46,11 +57,12 @@ export function useVoice(options: UseVoiceOptions = {}) {
         setTranscript(fullTranscript);
 
         if (finalTranscript && options.onResult) {
-          options.onResult(finalTranscript);
+          console.log("Calling onResult with:", finalTranscript);
+          options.onResult(finalTranscript.trim());
         }
       };
 
-      recognition.onerror = (event) => {
+      recognition.onerror = (event: any) => {
         console.error("Speech recognition error:", event.error);
         setIsListening(false);
         if (options.onError) {
@@ -59,6 +71,7 @@ export function useVoice(options: UseVoiceOptions = {}) {
       };
 
       recognition.onend = () => {
+        console.log("Voice recognition ended");
         setIsListening(false);
       };
 
