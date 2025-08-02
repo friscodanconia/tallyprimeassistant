@@ -19,13 +19,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Send message and get AI response
   app.post("/api/messages", async (req, res) => {
     try {
-      const { content } = insertMessageSchema.parse(req.body);
+      const { content, type = "text", metadata } = insertMessageSchema.parse(req.body);
       
       // Save user message
       const userMessage = await storage.createMessage({
         content,
         role: "user",
-        type: "text"
+        type: type || "text",
+        metadata
       });
 
       // Search FAQ for relevant answers

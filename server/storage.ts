@@ -1,9 +1,9 @@
-import { type Message, type InsertMessage, type FaqItem, type InsertFaqItem } from "@shared/schema";
+import { type Message, type CreateMessage, type FaqItem, type InsertFaqItem } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
   // Messages
-  createMessage(message: InsertMessage): Promise<Message>;
+  createMessage(message: CreateMessage): Promise<Message>;
   getMessages(): Promise<Message[]>;
   clearMessages(): Promise<void>;
   
@@ -320,7 +320,7 @@ export class MemStorage implements IStorage {
     console.log(`Initialized ${this.faqItems.size} FAQ items for TallyPrime`);
   }
 
-  async createMessage(message: InsertMessage): Promise<Message> {
+  async createMessage(message: CreateMessage): Promise<Message> {
     const newMessage: Message = {
       id: randomUUID(),
       ...message,

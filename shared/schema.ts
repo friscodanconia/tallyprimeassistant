@@ -22,7 +22,15 @@ export const faqItems = pgTable("faq_items", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Client request schema (without role - server sets it)
 export const insertMessageSchema = createInsertSchema(messages).omit({
+  id: true,
+  createdAt: true,  
+  role: true,  // Remove role from validation since server sets it
+});
+
+// Full message schema for storage operations
+export const createMessageSchema = createInsertSchema(messages).omit({
   id: true,
   createdAt: true,
 });
@@ -34,6 +42,7 @@ export const insertFaqItemSchema = createInsertSchema(faqItems).omit({
 
 export type Message = typeof messages.$inferSelect;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
+export type CreateMessage = z.infer<typeof createMessageSchema>;
 export type FaqItem = typeof faqItems.$inferSelect;
 export type InsertFaqItem = z.infer<typeof insertFaqItemSchema>;
 
