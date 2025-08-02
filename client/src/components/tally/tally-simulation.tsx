@@ -23,135 +23,160 @@ interface TallySimulationProps {
 
 export function TallySimulation({ simulationType, metadata }: TallySimulationProps) {
   const renderVoucherEntry = () => (
-    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-lg">
-      {/* TallyPrime Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-t-lg">
+    <div className="bg-white border border-gray-300 rounded-sm font-sans">
+      {/* TallyPrime Header - Dark Blue */}
+      <div className="bg-[#1e3a8a] text-white px-3 py-1 text-sm font-medium">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Calculator className="h-5 w-5" />
-            <span className="font-semibold">TallyPrime - Voucher Entry</span>
+          <div className="flex items-center space-x-4">
+            <span>TallyPrime</span>
+            <span className="text-gray-300">|</span>
+            <span>EDU</span>
           </div>
-          <div className="flex items-center space-x-1">
-            <Button variant="ghost" size="sm" className="text-white hover:bg-blue-600 p-1">
-              <Settings className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="text-white hover:bg-blue-600 p-1">
-              <X className="h-4 w-4" />
-            </Button>
+          <div className="flex items-center space-x-3 text-xs">
+            <span>K:Company</span>
+            <span>Y:Data</span>
+            <span>Z:Exchange</span>
+            <span className="bg-white text-black px-2 py-0.5 rounded">Gateway of Tally</span>
+            <span>O:Import</span>
+            <span>E:Export</span>
+            <span>M:Share</span>
+            <span>P:Print</span>
+            <span>F1:Help</span>
           </div>
         </div>
       </div>
 
-      {/* Menu Bar */}
-      <div className="bg-gray-100 border-b px-4 py-1">
-        <div className="flex space-x-6 text-sm">
-          <span className="text-blue-600 font-medium">Gateway of Tally</span>
-          <span>Vouchers</span>
-          <span className="text-blue-600 font-medium">Sales</span>
+      {/* Navigation Bar */}
+      <div className="bg-[#4a5568] text-white px-3 py-1 text-sm">
+        <div className="flex items-center space-x-2">
+          <span className="text-yellow-300">Gateway of Tally</span>
+          <span>&gt;</span>
+          <span className="text-yellow-300">Vouchers</span>
+          <span>&gt;</span>
+          <span className="text-yellow-300">F8: Sales</span>
         </div>
       </div>
 
-      {/* Voucher Form */}
-      <div className="p-6 space-y-4">
-        <div className="grid grid-cols-2 gap-6">
-          {/* Left Column */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <FileText className="h-4 w-4 text-blue-600" />
-              <Label className="font-semibold text-blue-800">Sales Voucher</Label>
-            </div>
-            
-            <div className="space-y-3">
-              <div>
-                <Label className="text-sm font-medium">Voucher No.</Label>
-                <Input className="mt-1" value="SV001" readOnly />
-              </div>
-              
-              <div>
-                <Label className="text-sm font-medium">Date</Label>
-                <div className="flex items-center mt-1">
-                  <Input value="01-Jan-2024" readOnly />
-                  <Calendar className="h-4 w-4 ml-2 text-gray-400" />
+      {/* Main Content Area with TallyPrime styling */}
+      <div className="bg-gray-50 min-h-[500px] p-4">
+        {/* Yellow Header Section */}
+        <div className="bg-yellow-400 text-black px-3 py-1 text-sm font-bold border border-gray-400">
+          Sales Voucher
+        </div>
+        
+        {/* Form Area */}
+        <div className="bg-white border-l border-r border-b border-gray-400 p-4">
+          <div className="grid grid-cols-2 gap-8">
+            {/* Left Side */}
+            <div className="space-y-4">
+              <div className="flex items-center">
+                <label className="w-24 text-sm text-gray-700">Date:</label>
+                <div className="border-b border-gray-400 flex-1 pb-1">
+                  <span className="text-sm">1-Jan-24</span>
                 </div>
               </div>
               
-              <div>
-                <Label className="text-sm font-medium">Party Name</Label>
-                <Input className="mt-1" placeholder="Select Customer" />
+              <div className="flex items-center">
+                <label className="w-24 text-sm text-gray-700">Voucher No:</label>
+                <div className="border-b border-gray-400 flex-1 pb-1">
+                  <span className="text-sm">1</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center">
+                <label className="w-24 text-sm text-gray-700">Party A/c Name:</label>
+                <div className="border-b border-gray-400 flex-1 pb-1">
+                  <span className="text-sm text-blue-600 cursor-pointer">Customer ABC</span>
+                </div>
+              </div>
+              
+              <div className="mt-6">
+                <div className="bg-gray-100 border border-gray-400 p-3">
+                  <div className="text-xs font-bold mb-2">Sales Account Details</div>
+                  <div className="space-y-1 text-xs">
+                    <div className="flex justify-between">
+                      <span>Sales Account</span>
+                      <span>10,000.00</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>CGST @ 9%</span>
+                      <span>900.00</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>SGST @ 9%</span>
+                      <span>900.00</span>
+                    </div>
+                    <div className="border-t border-gray-400 pt-1 flex justify-between font-bold">
+                      <span>Total</span>
+                      <span>11,800.00</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Side */}
+            <div className="space-y-4">
+              <div className="flex items-center">
+                <label className="w-24 text-sm text-gray-700">Reference:</label>
+                <div className="border-b border-gray-400 flex-1 pb-1">
+                  <span className="text-sm">Invoice ABC123</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center">
+                <label className="w-24 text-sm text-gray-700">Due Date:</label>
+                <div className="border-b border-gray-400 flex-1 pb-1">
+                  <span className="text-sm">31-Jan-24</span>
+                </div>
+              </div>
+              
+              <div className="mt-6">
+                <div className="text-xs font-bold mb-2">Ledger Account</div>
+                <div className="border border-gray-400 bg-white">
+                  <div className="bg-gray-200 px-2 py-1 text-xs font-bold border-b border-gray-400">
+                    Particulars
+                  </div>
+                  <div className="p-2 space-y-1 text-xs">
+                    <div className="flex justify-between py-1">
+                      <span className="text-blue-600 cursor-pointer">Sales Account</span>
+                      <span>10,000.00</span>
+                    </div>
+                    <div className="flex justify-between py-1">
+                      <span className="text-blue-600 cursor-pointer">Output CGST 9%</span>
+                      <span>900.00</span>
+                    </div>
+                    <div className="flex justify-between py-1">
+                      <span className="text-blue-600 cursor-pointer">Output SGST 9%</span>
+                      <span>900.00</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Right Column */}
-          <div className="space-y-4">
-            <div className="bg-yellow-50 border border-yellow-200 rounded p-3">
-              <div className="flex items-center space-x-2 mb-2">
-                <DollarSign className="h-4 w-4 text-yellow-600" />
-                <Label className="font-semibold text-yellow-800">Amount Details</Label>
-              </div>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span>Taxable Value:</span>
-                  <span className="font-mono">₹ 10,000.00</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>CGST @ 9%:</span>
-                  <span className="font-mono">₹ 900.00</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>SGST @ 9%:</span>
-                  <span className="font-mono">₹ 900.00</span>
-                </div>
-                <Separator />
-                <div className="flex justify-between font-semibold">
-                  <span>Total Amount:</span>
-                  <span className="font-mono">₹ 11,800.00</span>
+          {/* Bottom Section - Narration */}
+          <div className="mt-6 grid grid-cols-2 gap-8">
+            <div>
+              <div className="flex items-center">
+                <label className="w-24 text-sm text-gray-700">Narration:</label>
+                <div className="border-b border-gray-400 flex-1 pb-1">
+                  <span className="text-sm">Being goods sold as per invoice</span>
                 </div>
               </div>
             </div>
+            <div className="text-right">
+              <div className="text-sm">
+                <div className="mb-1">Total Amount: <span className="font-bold">₹ 11,800.00</span></div>
+              </div>
+            </div>
           </div>
-        </div>
-
-        {/* Items Table */}
-        <div className="mt-6">
-          <Label className="font-semibold mb-2 block">Item Details</Label>
-          <div className="border rounded-lg overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr className="text-sm">
-                  <th className="text-left p-3 font-medium">Item Name</th>
-                  <th className="text-left p-3 font-medium">Quantity</th>
-                  <th className="text-left p-3 font-medium">Rate</th>
-                  <th className="text-left p-3 font-medium">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-t">
-                  <td className="p-3">Product ABC</td>
-                  <td className="p-3">10 Nos</td>
-                  <td className="p-3">₹ 1,000.00</td>
-                  <td className="p-3 font-mono">₹ 10,000.00</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex justify-between items-center pt-4 border-t">
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <Building className="h-4 w-4" />
-            <span>Company: Demo Company Ltd.</span>
-          </div>
-          <div className="flex space-x-3">
-            <Button variant="outline" size="sm">
-              <X className="h-4 w-4 mr-1" />
-              Cancel
-            </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700" size="sm">
-              <Save className="h-4 w-4 mr-1" />
-              Save Voucher
-            </Button>
+          
+          {/* Status Bar */}
+          <div className="mt-8 bg-gray-200 border border-gray-400 px-3 py-1 text-xs flex justify-between">
+            <span>Ctrl+A: Accept | ESC: Quit | F12: Config</span>
+            <span>Company: Demo Company Pvt Ltd</span>
           </div>
         </div>
       </div>
@@ -159,222 +184,224 @@ export function TallySimulation({ simulationType, metadata }: TallySimulationPro
   );
 
   const renderBalanceSheet = () => (
-    <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-lg">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-green-600 to-green-700 text-white px-4 py-2 rounded-t-lg">
+    <div className="bg-white border border-gray-300 rounded-sm font-sans">
+      {/* TallyPrime Header */}
+      <div className="bg-[#1e3a8a] text-white px-3 py-1 text-sm font-medium">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <span>TallyPrime</span>
+            <span className="text-gray-300">|</span>
+            <span>EDU</span>
+          </div>
+          <div className="flex items-center space-x-3 text-xs">
+            <span>K:Company</span>
+            <span>Y:Data</span>
+            <span>Z:Exchange</span>
+            <span className="bg-white text-black px-2 py-0.5 rounded">Display</span>
+            <span>O:Import</span>
+            <span>E:Export</span>
+            <span>M:Share</span>
+            <span>P:Print</span>
+            <span>F1:Help</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Bar */}
+      <div className="bg-[#4a5568] text-white px-3 py-1 text-sm">
         <div className="flex items-center space-x-2">
-          <FileText className="h-5 w-5" />
-          <span className="font-semibold">TallyPrime - Balance Sheet</span>
+          <span className="text-yellow-300">Gateway of Tally</span>
+          <span>&gt;</span>
+          <span className="text-yellow-300">Display</span>
+          <span>&gt;</span>
+          <span className="text-yellow-300">Balance Sheet</span>
         </div>
       </div>
 
-      {/* Report Content */}
-      <div className="p-6">
-        <div className="text-center mb-6">
-          <h2 className="text-xl font-bold text-green-800">Demo Company Ltd.</h2>
-          <p className="text-sm text-gray-600">Balance Sheet as on 31st March, 2024</p>
+      {/* Balance Sheet Content */}
+      <div className="bg-gray-50 min-h-[500px] p-4">
+        <div className="bg-yellow-400 text-black px-3 py-1 text-sm font-bold border border-gray-400">
+          Balance Sheet
         </div>
+        
+        <div className="bg-white border-l border-r border-b border-gray-400 p-4">
+          <div className="text-center mb-4">
+            <h2 className="text-lg font-bold">Demo Company Pvt Ltd</h2>
+            <p className="text-sm">Balance Sheet as on 31-Mar-2024</p>
+          </div>
 
-        <div className="grid grid-cols-2 gap-8">
-          {/* Liabilities */}
-          <div>
-            <h3 className="font-semibold text-green-700 mb-4 border-b pb-2">LIABILITIES</h3>
-            <div className="space-y-2">
-              <div className="flex justify-between py-1">
-                <span>Share Capital</span>
-                <span className="font-mono">₹ 5,00,000.00</span>
+          <div className="grid grid-cols-2 gap-8">
+            {/* Liabilities */}
+            <div>
+              <div className="bg-gray-200 px-2 py-1 text-sm font-bold border border-gray-400 mb-2">
+                LIABILITIES
               </div>
-              <div className="flex justify-between py-1">
-                <span>Reserves & Surplus</span>
-                <span className="font-mono">₹ 2,50,000.00</span>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between py-1 border-b border-gray-200">
+                  <span className="text-blue-600 cursor-pointer">Share Capital</span>
+                  <span>5,00,000.00</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-gray-200">
+                  <span className="text-blue-600 cursor-pointer">Reserves & Surplus</span>
+                  <span>2,50,000.00</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-gray-200">
+                  <span className="text-blue-600 cursor-pointer">Current Liabilities</span>
+                  <span>1,25,000.00</span>
+                </div>
+                <div className="flex justify-between py-1 border-t-2 border-gray-400 font-bold">
+                  <span>Total</span>
+                  <span>8,75,000.00</span>
+                </div>
               </div>
-              <div className="flex justify-between py-1">
-                <span>Current Liabilities</span>
-                <span className="font-mono">₹ 1,25,000.00</span>
+            </div>
+
+            {/* Assets */}
+            <div>
+              <div className="bg-gray-200 px-2 py-1 text-sm font-bold border border-gray-400 mb-2">
+                ASSETS
               </div>
-              <div className="flex justify-between py-1 border-t font-semibold">
-                <span>Total</span>
-                <span className="font-mono">₹ 8,75,000.00</span>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between py-1 border-b border-gray-200">
+                  <span className="text-blue-600 cursor-pointer">Fixed Assets</span>
+                  <span>6,00,000.00</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-gray-200">
+                  <span className="text-blue-600 cursor-pointer">Current Assets</span>
+                  <span>2,50,000.00</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-gray-200">
+                  <span className="text-blue-600 cursor-pointer">Cash & Bank</span>
+                  <span>25,000.00</span>
+                </div>
+                <div className="flex justify-between py-1 border-t-2 border-gray-400 font-bold">
+                  <span>Total</span>
+                  <span>8,75,000.00</span>
+                </div>
               </div>
             </div>
           </div>
-
-          {/* Assets */}
-          <div>
-            <h3 className="font-semibold text-green-700 mb-4 border-b pb-2">ASSETS</h3>
-            <div className="space-y-2">
-              <div className="flex justify-between py-1">
-                <span>Fixed Assets</span>
-                <span className="font-mono">₹ 6,00,000.00</span>
-              </div>
-              <div className="flex justify-between py-1">
-                <span>Current Assets</span>
-                <span className="font-mono">₹ 2,50,000.00</span>
-              </div>
-              <div className="flex justify-between py-1">
-                <span>Cash & Bank</span>
-                <span className="font-mono">₹ 25,000.00</span>
-              </div>
-              <div className="flex justify-between py-1 border-t font-semibold">
-                <span>Total</span>
-                <span className="font-mono">₹ 8,75,000.00</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-6 pt-4 border-t text-center">
-          <Badge variant="secondary" className="bg-green-100 text-green-800">
-            Report Generated Successfully
-          </Badge>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderInvoice = () => (
-    <div className="bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200 rounded-lg">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-orange-600 to-orange-700 text-white px-4 py-2 rounded-t-lg">
-        <div className="flex items-center space-x-2">
-          <FileText className="h-5 w-5" />
-          <span className="font-semibold">TallyPrime - Sales Invoice</span>
-        </div>
-      </div>
-
-      {/* Invoice Content */}
-      <div className="p-6">
-        <div className="flex justify-between items-start mb-6">
-          <div>
-            <h2 className="text-xl font-bold text-orange-800">INVOICE</h2>
-            <p className="text-sm text-gray-600">Invoice No: INV-2024-001</p>
-            <p className="text-sm text-gray-600">Date: 01-Jan-2024</p>
-          </div>
-          <div className="text-right">
-            <h3 className="font-semibold">Demo Company Ltd.</h3>
-            <p className="text-sm text-gray-600">123 Business Street</p>
-            <p className="text-sm text-gray-600">City, State - 123456</p>
-            <p className="text-sm text-gray-600">GSTIN: 27ABCDE1234F1Z5</p>
-          </div>
-        </div>
-
-        <div className="bg-orange-50 border border-orange-200 rounded p-4 mb-6">
-          <h4 className="font-semibold mb-2">Bill To:</h4>
-          <div className="text-sm">
-            <p>Customer Name</p>
-            <p>Customer Address Line 1</p>
-            <p>Customer Address Line 2</p>
-            <p>GSTIN: 27XYZAB1234C1D2</p>
-          </div>
-        </div>
-
-        {/* Invoice Table */}
-        <div className="border rounded-lg overflow-hidden mb-6">
-          <table className="w-full">
-            <thead className="bg-orange-100">
-              <tr className="text-sm">
-                <th className="text-left p-3 font-medium">Description</th>
-                <th className="text-center p-3 font-medium">Qty</th>
-                <th className="text-right p-3 font-medium">Rate</th>
-                <th className="text-right p-3 font-medium">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-t">
-                <td className="p-3">Product ABC - Premium Quality</td>
-                <td className="p-3 text-center">10</td>
-                <td className="p-3 text-right font-mono">₹ 1,000.00</td>
-                <td className="p-3 text-right font-mono">₹ 10,000.00</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* Totals */}
-        <div className="flex justify-end">
-          <div className="w-80 space-y-2">
-            <div className="flex justify-between py-1">
-              <span>Subtotal:</span>
-              <span className="font-mono">₹ 10,000.00</span>
-            </div>
-            <div className="flex justify-between py-1">
-              <span>CGST @ 9%:</span>
-              <span className="font-mono">₹ 900.00</span>
-            </div>
-            <div className="flex justify-between py-1">
-              <span>SGST @ 9%:</span>
-              <span className="font-mono">₹ 900.00</span>
-            </div>
-            <div className="flex justify-between py-1 border-t-2 border-orange-300 font-bold text-lg">
-              <span>Total:</span>
-              <span className="font-mono">₹ 11,800.00</span>
-            </div>
+          
+          <div className="mt-8 bg-gray-200 border border-gray-400 px-3 py-1 text-xs flex justify-between">
+            <span>Alt+F2: Period | F12: Config | ESC: Quit</span>
+            <span>Company: Demo Company Pvt Ltd</span>
           </div>
         </div>
       </div>
     </div>
   );
 
-  const renderDayBook = () => (
-    <div className="bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-200 rounded-lg">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2 rounded-t-lg">
-        <div className="flex items-center space-x-2">
-          <FileText className="h-5 w-5" />
-          <span className="font-semibold">TallyPrime - Day Book</span>
+  const renderReport = () => (
+    <div className="bg-white border border-gray-300 rounded-sm font-sans">
+      {/* TallyPrime Header */}
+      <div className="bg-[#1e3a8a] text-white px-3 py-1 text-sm font-medium">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <span>TallyPrime</span>
+            <span className="text-gray-300">|</span>
+            <span>EDU</span>
+          </div>
+          <div className="flex items-center space-x-3 text-xs">
+            <span>K:Company</span>
+            <span>Y:Data</span>
+            <span>Z:Exchange</span>
+            <span className="bg-white text-black px-2 py-0.5 rounded">List of Reports</span>
+            <span>O:Import</span>
+            <span>E:Export</span>
+            <span>M:Share</span>
+            <span>P:Print</span>
+            <span>F1:Help</span>
+          </div>
         </div>
       </div>
 
-      {/* Day Book Content */}
-      <div className="p-6">
-        <div className="text-center mb-6">
-          <h2 className="text-xl font-bold text-purple-800">Demo Company Ltd.</h2>
-          <p className="text-sm text-gray-600">Day Book for 01-Jan-2024</p>
+      {/* Navigation Bar */}
+      <div className="bg-[#4a5568] text-white px-3 py-1 text-sm">
+        <div className="flex items-center space-x-2">
+          <span className="text-yellow-300">Go To</span>
+          <span>&gt;</span>
+          <span className="text-yellow-300">List of Reports</span>
         </div>
+      </div>
 
-        <div className="border rounded-lg overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-purple-100">
-              <tr className="text-sm">
-                <th className="text-left p-3 font-medium">Date</th>
-                <th className="text-left p-3 font-medium">Particulars</th>
-                <th className="text-left p-3 font-medium">Vch Type</th>
-                <th className="text-left p-3 font-medium">Vch No.</th>
-                <th className="text-right p-3 font-medium">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-t">
-                <td className="p-3">01-Jan-24</td>
-                <td className="p-3">Customer A/c</td>
-                <td className="p-3">Sales</td>
-                <td className="p-3">S001</td>
-                <td className="p-3 text-right font-mono">₹ 11,800.00</td>
-              </tr>
-              <tr className="border-t bg-gray-50">
-                <td className="p-3">01-Jan-24</td>
-                <td className="p-3">Cash A/c</td>
-                <td className="p-3">Receipt</td>
-                <td className="p-3">R001</td>
-                <td className="p-3 text-right font-mono">₹ 5,000.00</td>
-              </tr>
-              <tr className="border-t">
-                <td className="p-3">01-Jan-24</td>
-                <td className="p-3">Purchase A/c</td>
-                <td className="p-3">Purchase</td>
-                <td className="p-3">P001</td>
-                <td className="p-3 text-right font-mono">₹ 8,500.00</td>
-              </tr>
-            </tbody>
-          </table>
+      {/* List of Reports matching the actual TallyPrime style */}
+      <div className="bg-gray-50 min-h-[500px] p-4">
+        <div className="bg-[#4169e1] text-white px-3 py-1 text-sm font-bold">
+          List of Reports
         </div>
+        
+        <div className="bg-white border-l border-r border-b border-gray-400">
+          <div className="grid grid-cols-2 gap-0">
+            {/* Left Column */}
+            <div className="border-r border-gray-400">
+              {/* Saved Views Section */}
+              <div className="bg-orange-400 text-black px-2 py-1 text-xs font-bold border-b border-gray-400">
+                Saved Views
+              </div>
+              <div className="p-2 space-y-1 text-xs">
+                <div className="text-blue-600 cursor-pointer">Bills Payable - GST</div>
+                <div className="text-blue-600 cursor-pointer">Bills Payable - GST - Sundry Creditors</div>
+                <div className="text-blue-600 cursor-pointer">Bills Payable - GST - Sundry Debtors</div>
+                <div className="text-blue-600 cursor-pointer">Bills Receivable - GST</div>
+                <div className="text-blue-600 cursor-pointer">Bills Receivable - GST - Sundry Creditors</div>
+                <div className="text-blue-600 cursor-pointer">Bills Receivable - GST - Sundry Debtors</div>
+                <div className="text-blue-600 cursor-pointer">GST Outward Supplies - Filed Invoices</div>
+                <div className="text-blue-600 cursor-pointer">Ledger Vouchers - GST Details</div>
+              </div>
 
-        <div className="mt-6 pt-4 border-t flex justify-between items-center">
-          <Badge variant="secondary" className="bg-purple-100 text-purple-800">
-            3 Transactions Found
-          </Badge>
-          <div className="text-sm text-gray-600">
-            <span className="font-semibold">Total Value: ₹ 25,300.00</span>
+              {/* Common Reports Section */}
+              <div className="bg-orange-400 text-black px-2 py-1 text-xs font-bold border-b border-t border-gray-400 mt-4">
+                Common Reports
+              </div>
+              <div className="p-2 space-y-1 text-xs">
+                <div className="text-blue-600 cursor-pointer">Daybook</div>
+                <div className="text-blue-600 cursor-pointer">Cashbook</div>
+                <div className="text-blue-600 cursor-pointer">Profit & Loss A/c</div>
+                <div className="text-blue-600 cursor-pointer">Cash/Bank Book</div>
+                <div className="text-blue-600 cursor-pointer">Balance Sheet</div>
+                <div className="text-blue-600 cursor-pointer">Ledger Vouchers</div>
+                <div className="text-blue-600 cursor-pointer">Ledger Vouchers - GST</div>
+                <div className="text-blue-600 cursor-pointer">Trial Balance</div>
+                <div className="text-blue-600 cursor-pointer">Bills Payable</div>
+                <div className="text-blue-600 cursor-pointer">Bills Receivable</div>
+                <div className="text-blue-600 cursor-pointer">Bills Payable</div>
+                <div className="text-blue-600 cursor-pointer">Group Summary</div>
+                <div className="text-blue-600 cursor-pointer">Ratio Analysis</div>
+              </div>
+            </div>
+
+            {/* Right Column */}
+            <div>
+              <div className="bg-orange-400 text-black px-2 py-1 text-xs font-bold border-b border-gray-400">
+                Data Payable (All Companies)
+              </div>
+              <div className="p-2 space-y-1 text-xs">
+                <div className="text-blue-600 cursor-pointer">Create Master</div>
+                <div className="text-blue-600 cursor-pointer">Alter Master</div>
+                <div className="text-blue-600 cursor-pointer">Display Master</div>
+                <div className="text-blue-600 cursor-pointer">Show More</div>
+              </div>
+
+              <div className="bg-orange-400 text-black px-2 py-1 text-xs font-bold border-b border-t border-gray-400 mt-4">
+                Bills Payable (All Companies)
+              </div>
+              <div className="p-2 space-y-1 text-xs">
+                <div className="text-blue-600 cursor-pointer">Bills Payable (All Companies)</div>
+                <div className="text-blue-600 cursor-pointer">Bills Receivable (All Companies)</div>
+                <div className="text-blue-600 cursor-pointer">Bank Statement (All Companies)</div>
+                <div className="text-blue-600 cursor-pointer">Bills Receivable (All Companies)</div>
+                <div className="text-blue-600 cursor-pointer">Bills Receivable (All Comp)</div>
+                <div className="text-blue-600 cursor-pointer">Period Daily Summary (All Comp)</div>
+                <div className="text-blue-600 cursor-pointer">IMS Report Supplies (All Companies)</div>
+                <div className="text-blue-600 cursor-pointer">Ledger Vouchers (All Companies)</div>
+                <div className="text-blue-600 cursor-pointer">MIS Payable - Book A/c Detail (All Companies)</div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-gray-200 border-t border-gray-400 px-3 py-1 text-xs flex justify-between">
+            <span>Enter: Select | F12: Config | ESC: Quit</span>
+            <span>Company: Demo Company Pvt Ltd</span>
           </div>
         </div>
       </div>
@@ -386,10 +413,10 @@ export function TallySimulation({ simulationType, metadata }: TallySimulationPro
       return renderVoucherEntry();
     case "balance_sheet":
       return renderBalanceSheet();
-    case "invoice":
-      return renderInvoice();
     case "report":
-      return renderDayBook();
+      return renderReport();
+    case "invoice":
+      return renderVoucherEntry(); // Use voucher for invoice simulation
     default:
       return renderVoucherEntry();
   }
