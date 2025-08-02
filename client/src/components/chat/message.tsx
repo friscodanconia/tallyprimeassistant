@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useSpeech } from "@/hooks/use-speech";
 import { cn } from "@/lib/utils";
+import { TallySimulation } from "@/components/tally/tally-simulation";
 
 interface MessageProps {
   message: MessageType;
@@ -18,6 +19,20 @@ export function Message({ message }: MessageProps) {
     if (message.content) {
       speak(message.content);
     }
+  };
+
+  const getSimulationType = (content: string): "voucher" | "report" | "balance_sheet" | "invoice" => {
+    const lowerContent = content.toLowerCase();
+    if (lowerContent.includes("balance sheet") || lowerContent.includes("balance")) {
+      return "balance_sheet";
+    }
+    if (lowerContent.includes("invoice") || lowerContent.includes("sales invoice")) {
+      return "invoice";
+    }
+    if (lowerContent.includes("report") || lowerContent.includes("day book")) {
+      return "report";
+    }
+    return "voucher"; // default
   };
 
   const getTypeIcon = () => {
@@ -97,14 +112,12 @@ export function Message({ message }: MessageProps) {
           )}
           
           {/* Simulation content */}
-          {metadata?.simulation && (
-            <div className="bg-white border border-gray-200 rounded-lg p-4 font-mono text-sm mt-3">
-              <div className="text-center mb-4 text-blue-600 font-bold">
-                ═══ TALLYPRIME SIMULATION ═══
-              </div>
-              <pre className="whitespace-pre-wrap text-gray-700">
-                {metadata.simulation}
-              </pre>
+          {metadata?.simulation && message.type === "simulation" && (
+            <div className="mt-4">
+              <TallySimulation 
+                simulationType={getSimulationType(message.content)}
+                metadata={metadata}
+              />
             </div>
           )}
         </div>

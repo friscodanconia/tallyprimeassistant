@@ -70,33 +70,68 @@ For TallyPrime simulations, create ASCII-style interfaces that show what the use
 
 export async function generateTallySimulation(action: string): Promise<ChatResponse> {
   try {
-    const prompt = `Create a TallyPrime simulation for the action: "${action}". 
-    Show what the user interface would look like in ASCII format, including menus, forms, and navigation instructions.
-    
-    Respond in JSON format:
-    {
-      "content": "Description of the simulation",
-      "type": "simulation",
-      "metadata": {
-        "simulation": "ASCII interface content",
-        "confidence": 0.95
+    // Create pre-built simulations for common actions
+    const simulationMap: { [key: string]: ChatResponse } = {
+      "Create a new voucher entry": {
+        content: "Here's a TallyPrime voucher entry simulation. This shows how to create a sales voucher with GST calculations, item details, and proper accounting entries.",
+        type: "simulation",
+        metadata: {
+          simulation: "voucher_entry",
+          confidence: 0.95
+        }
+      },
+      "Generate a sample financial report": {
+        content: "Here's a TallyPrime Day Book report simulation. This shows daily transaction summaries with voucher details and amounts.",
+        type: "simulation", 
+        metadata: {
+          simulation: "day_book",
+          confidence: 0.95
+        }
+      },
+      "Open Balance Sheet": {
+        content: "Here's a TallyPrime Balance Sheet simulation. This shows the company's financial position with assets and liabilities properly categorized.",
+        type: "simulation",
+        metadata: {
+          simulation: "balance_sheet",
+          confidence: 0.95
+        }
+      },
+      "Create Sales Invoice": {
+        content: "Here's a TallyPrime Sales Invoice simulation. This shows how to generate a GST-compliant invoice with proper formatting and tax calculations.",
+        type: "simulation",
+        metadata: {
+          simulation: "sales_invoice",
+          confidence: 0.95
+        }
       }
-    }`;
+    };
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [{ role: "user", content: prompt }],
-      response_format: { type: "json_object" },
-      temperature: 0.3,
-    });
+    // Check if we have a pre-built simulation
+    if (simulationMap[action]) {
+      return simulationMap[action];
+    }
 
-    const result = JSON.parse(response.choices[0].message.content || "{}");
-    
+    // Fallback for other actions
+    const lowerAction = action.toLowerCase();
+    let simulationType = "voucher";
+    let content = `Here's a TallyPrime simulation for: ${action}`;
+
+    if (lowerAction.includes("balance") || lowerAction.includes("balance sheet")) {
+      simulationType = "balance_sheet";
+      content = "Here's a TallyPrime Balance Sheet simulation showing your company's financial position.";
+    } else if (lowerAction.includes("invoice") || lowerAction.includes("sales")) {
+      simulationType = "invoice";
+      content = "Here's a TallyPrime Sales Invoice simulation with GST calculations.";
+    } else if (lowerAction.includes("report") || lowerAction.includes("day book")) {
+      simulationType = "report";
+      content = "Here's a TallyPrime Day Book report showing daily transactions.";
+    }
+
     return {
-      content: result.content || `Simulation for ${action}`,
+      content,
       type: "simulation",
       metadata: {
-        simulation: result.metadata?.simulation || "Simulation not available",
+        simulation: simulationType,
         confidence: 0.95
       }
     };
