@@ -18,9 +18,12 @@ interface MessageProps {
 
 export function Message({ message }: MessageProps) {
   const [selectedLanguage, setSelectedLanguage] = useState<string>('auto');
-  const speechOptions = {
-    preferredLanguage: selectedLanguage === 'Hindi' ? 'hi' : selectedLanguage === 'English' ? 'en' : undefined
+  
+  // Create speech options based on selected language
+  const speechOptions = selectedLanguage === 'auto' ? {} : {
+    preferredLanguage: selectedLanguage === 'Hindi' ? 'hi' : 'en'
   };
+  
   const { speak, isSpeaking, getAvailableLanguages } = useSpeech(speechOptions);
   const isUser = message.role === "user";
   const metadata = message.metadata as any;

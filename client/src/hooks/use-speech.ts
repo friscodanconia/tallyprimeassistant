@@ -22,6 +22,9 @@ export function useSpeech(options: UseSpeechOptions = {}) {
   const findBestVoice = useCallback((language: string) => {
     const voices = window.speechSynthesis.getVoices();
     
+    // Log all available voices for debugging
+    console.log('All available voices:', voices.map(v => `${v.name} (${v.lang})`));
+    
     // Priority order for Hindi voices
     const hindiPriorities = ['hi-IN', 'hi'];
     const englishPriorities = ['en-IN', 'en-US', 'en-GB', 'en'];
@@ -34,7 +37,15 @@ export function useSpeech(options: UseSpeechOptions = {}) {
     }
     
     // Fallback to first voice of the language family
-    return voices.find(v => v.lang.startsWith(language.split('-')[0]));
+    const fallbackVoice = voices.find(v => v.lang.startsWith(language.split('-')[0]));
+    
+    // If no Hindi voice found, log a warning
+    if (language === 'hi' && !fallbackVoice) {
+      console.warn('No Hindi voices available. Available languages:', 
+        Array.from(new Set(voices.map(v => v.lang))).sort());
+    }
+    
+    return fallbackVoice;
   }, []);
 
   const speak = useCallback((text: string) => {
@@ -48,20 +59,30 @@ export function useSpeech(options: UseSpeechOptions = {}) {
 
     const utterance = new SpeechSynthesisUtterance(text);
     
-    // Auto-detect language and set appropriate voice
+    // Determine target language
     const isHindi = containsHindi(text);
     const targetLanguage = options.preferredLanguage || (isHindi ? 'hi' : 'en');
+    
+    // Debug logging
+    console.log('Speech synthesis debug:', {
+      text: text.substring(0, 50) + '...',
+      preferredLanguage: options.preferredLanguage,
+      isHindi,
+      targetLanguage
+    });
     
     // Set language
     utterance.lang = targetLanguage === 'hi' ? 'hi-IN' : 'en-IN';
     
     // Find and set the best voice
     const bestVoice = findBestVoice(targetLanguage);
+    console.log('Selected voice:', bestVoice ? `${bestVoice.name} (${bestVoice.lang})` : 'None found');
+    
     if (bestVoice) {
       utterance.voice = bestVoice;
     }
     
-    utterance.rate = options.rate ?? (isHindi ? 0.8 : 1.0); // Slightly slower for Hindi
+    utterance.rate = options.rate ?? (targetLanguage === 'hi' ? 0.8 : 1.0); // Slower for Hindi
     utterance.pitch = options.pitch ?? 1;
     utterance.volume = options.volume ?? 1;
     
