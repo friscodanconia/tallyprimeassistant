@@ -44,10 +44,11 @@ export function useVoice(options: UseVoiceOptions = {}) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       const recognition = new SpeechRecognition();
 
-      // Configure recognition
+      // Configure recognition with more permissive settings
       recognition.continuous = true;
       recognition.interimResults = true;
       recognition.lang = "en-US";
+      recognition.maxAlternatives = 3;
 
       let finalTranscript = "";
       let hasResult = false;
@@ -100,6 +101,14 @@ export function useVoice(options: UseVoiceOptions = {}) {
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current);
         }
+        
+        // Don't stop on 'no-speech' error, just log it and continue
+        if (event.error === 'no-speech') {
+          console.log("No speech detected, but will use any captured audio...");
+          // Don't set listening to false or show error - let onend handle it
+          return;
+        }
+        
         setIsListening(false);
         
         let errorMessage = "Voice input failed: ";
@@ -107,15 +116,15 @@ export function useVoice(options: UseVoiceOptions = {}) {
           case 'not-allowed':
             errorMessage += "Microphone access denied";
             break;
-          case 'no-speech':
-            errorMessage += "No speech detected";
-            break;
           case 'audio-capture':
             errorMessage += "No microphone found";
             break;
           case 'network':
             errorMessage += "Network error";
             break;
+          case 'aborted':
+            console.log("Speech recognition was aborted");
+            return; // Don't show error for manual abort
           default:
             errorMessage += event.error;
         }
@@ -136,6 +145,11 @@ export function useVoice(options: UseVoiceOptions = {}) {
         if (!hasResult && transcript.trim() && options.onResult) {
           console.log("Using interim transcript:", transcript.trim());
           options.onResult(transcript.trim());
+        } else if (!hasResult || !transcript.trim()) {
+          console.log("No speech captured. Please try speaking louder or closer to the microphone.");
+          if (options.onError) {
+            options.onError("No speech detected. Please speak louder and try again.");
+          }
         }
       };
 
