@@ -103,6 +103,70 @@ export async function generateTallySimulation(action: string): Promise<ChatRespo
           simulation: "sales_invoice",
           confidence: 0.95
         }
+      },
+      "Open ledger account view": {
+        content: "Here's a TallyPrime Ledger Account simulation. This displays account transactions with running balances and detailed entries.",
+        type: "simulation",
+        metadata: {
+          simulation: "day_book",
+          confidence: 0.95
+        }
+      },
+      "Generate trial balance report": {
+        content: "Here's a TallyPrime Trial Balance simulation. This shows all account balances to verify that debits equal credits.",
+        type: "simulation",
+        metadata: {
+          simulation: "balance_sheet",
+          confidence: 0.95
+        }
+      },
+      "View customer master data": {
+        content: "Here's a TallyPrime Customer Master simulation. This displays customer information, outstanding balances, and contact details.",
+        type: "simulation",
+        metadata: {
+          simulation: "day_book",
+          confidence: 0.95
+        }
+      },
+      "Display stock summary report": {
+        content: "Here's a TallyPrime Stock Summary simulation. This shows inventory levels, stock values, and item details.",
+        type: "simulation",
+        metadata: {
+          simulation: "day_book",
+          confidence: 0.95
+        }
+      },
+      "Create payment voucher": {
+        content: "Here's a TallyPrime Payment Voucher simulation. This shows how to record payments with proper accounting entries.",
+        type: "simulation",
+        metadata: {
+          simulation: "voucher_entry",
+          confidence: 0.95
+        }
+      },
+      "Generate profit and loss statement": {
+        content: "Here's a TallyPrime Profit & Loss Statement simulation. This displays revenue, expenses, and net profit calculations.",
+        type: "simulation",
+        metadata: {
+          simulation: "balance_sheet",
+          confidence: 0.95
+        }
+      },
+      "View company information": {
+        content: "Here's a TallyPrime Company Information simulation. This shows company details, configuration settings, and master data.",
+        type: "simulation",
+        metadata: {
+          simulation: "day_book",
+          confidence: 0.95
+        }
+      },
+      "Open TallyPrime configuration": {
+        content: "Here's a TallyPrime Configuration simulation. This displays various settings and customization options for the software.",
+        type: "simulation",
+        metadata: {
+          simulation: "day_book",
+          confidence: 0.95
+        }
       }
     };
 

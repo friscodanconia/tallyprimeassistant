@@ -1,16 +1,28 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Play, BarChart3, Eraser, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import { 
+  FileText, 
+  BarChart3, 
+  Calculator, 
+  Receipt,
+  Building2,
+  TrendingUp,
+  Users,
+  Package,
+  CreditCard,
+  PieChart,
+  BookOpen,
+  Settings,
+  Eraser
+} from "lucide-react";
 
 export function QuickActions() {
-  const queryClient = useQueryClient();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  // Simulation mutation
-  const simulationMutation = useMutation({
+  const simulateMutation = useMutation({
     mutationFn: async (action: string) => {
       const response = await apiRequest("POST", "/api/simulate", { action });
       return response.json();
@@ -18,20 +30,19 @@ export function QuickActions() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/messages"] });
       toast({
-        title: "Simulation Generated",
-        description: "TallyPrime simulation has been added to the chat.",
+        title: "Simulation completed",
+        description: "TallyPrime action simulation has been added to your chat.",
       });
     },
     onError: () => {
       toast({
         title: "Error",
-        description: "Failed to generate simulation.",
+        description: "Failed to generate simulation. Please try again.",
         variant: "destructive",
       });
-    },
+    }
   });
 
-  // Clear chat mutation
   const clearChatMutation = useMutation({
     mutationFn: async () => {
       const response = await apiRequest("DELETE", "/api/messages");
@@ -46,55 +57,110 @@ export function QuickActions() {
     },
   });
 
-  const handleSimulateVoucher = () => {
-    simulationMutation.mutate("Create a new voucher entry");
-  };
-
-  const handleGenerateReport = () => {
-    simulationMutation.mutate("Generate a sample financial report");
-  };
-
-  const handleClearChat = () => {
-    clearChatMutation.mutate();
-  };
+  const quickActions = [
+    {
+      id: "voucher",
+      title: "Create Voucher",
+      icon: FileText,
+      action: "Create a new voucher entry"
+    },
+    {
+      id: "reports",
+      title: "Day Book Report",
+      icon: BarChart3,
+      action: "Generate a sample financial report"
+    },
+    {
+      id: "balance-sheet",
+      title: "Balance Sheet",
+      icon: Calculator,
+      action: "Open Balance Sheet"
+    },
+    {
+      id: "invoice",
+      title: "Sales Invoice",
+      icon: Receipt,
+      action: "Create Sales Invoice"
+    },
+    {
+      id: "ledger",
+      title: "Ledger Account",
+      icon: BookOpen,
+      action: "Open ledger account view"
+    },
+    {
+      id: "trial-balance",
+      title: "Trial Balance",
+      icon: PieChart,
+      action: "Generate trial balance report"
+    },
+    {
+      id: "customers",
+      title: "Customer Master",
+      icon: Users,
+      action: "View customer master data"
+    },
+    {
+      id: "inventory",
+      title: "Stock Summary",
+      icon: Package,
+      action: "Display stock summary report"
+    },
+    {
+      id: "payment",
+      title: "Payment Voucher",
+      icon: CreditCard,
+      action: "Create payment voucher"
+    },
+    {
+      id: "profit-loss",
+      title: "Profit & Loss",
+      icon: TrendingUp,
+      action: "Generate profit and loss statement"
+    },
+    {
+      id: "company",
+      title: "Company Info",
+      icon: Building2,
+      action: "View company information"
+    },
+    {
+      id: "config",
+      title: "Configuration",
+      icon: Settings,
+      action: "Open TallyPrime configuration"
+    }
+  ];
 
   return (
-    <Card className="text-xs">
-      <CardHeader className="pb-2 pt-3 px-3">
-        <CardTitle className="flex items-center text-sm">
-          <Zap className="h-3 w-3 text-green-600 mr-1" />
-          Quick Actions
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-2 px-3 pb-3">
-        <Button
-          onClick={handleSimulateVoucher}
-          disabled={simulationMutation.isPending}
-          className="w-full flex items-center justify-start bg-blue-600 hover:bg-blue-700 text-white overflow-hidden"
-        >
-          <Play className="h-4 w-4 mr-3 flex-shrink-0" />
-          <span className="truncate">Simulate Voucher Entry</span>
-        </Button>
+    <div className="space-y-2">
+      <h3 className="text-sm font-semibold text-gray-800 mb-3">Quick Actions</h3>
+      <div className="space-y-1">
+        {quickActions.map((action) => {
+          const IconComponent = action.icon;
+          return (
+            <button
+              key={action.id}
+              onClick={() => simulateMutation.mutate(action.action)}
+              disabled={simulateMutation.isPending}
+              className="w-full flex items-center gap-2 px-3 py-2 text-left text-xs hover:bg-blue-50 hover:text-blue-700 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed group"
+            >
+              <IconComponent className="h-3.5 w-3.5 text-blue-600 flex-shrink-0 group-hover:text-blue-700" />
+              <span className="truncate">{action.title}</span>
+            </button>
+          );
+        })}
         
-        <Button
-          onClick={handleGenerateReport}
-          disabled={simulationMutation.isPending}
-          className="w-full flex items-center justify-start bg-green-600 hover:bg-green-700 text-white overflow-hidden"
-        >
-          <BarChart3 className="h-4 w-4 mr-3 flex-shrink-0" />
-          <span className="truncate">Generate Sample Report</span>
-        </Button>
-        
-        <Button
-          onClick={handleClearChat}
+        {/* Clear Chat Button */}
+        <button
+          onClick={() => clearChatMutation.mutate()}
           disabled={clearChatMutation.isPending}
-          variant="outline"
-          className="w-full flex items-center justify-start border-gray-300 hover:bg-gray-50 overflow-hidden"
+          className="w-full flex items-center gap-2 px-3 py-2 text-left text-xs hover:bg-red-50 hover:text-red-700 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed group mt-3 border-t pt-3"
         >
-          <Eraser className="h-4 w-4 mr-3 flex-shrink-0" />
+          <Eraser className="h-3.5 w-3.5 text-red-600 flex-shrink-0 group-hover:text-red-700" />
           <span className="truncate">Clear Chat History</span>
-        </Button>
-      </CardContent>
-    </Card>
+        </button>
+      </div>
+    </div>
   );
 }
