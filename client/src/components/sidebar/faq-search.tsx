@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Search, FileText, BarChart3, Receipt, Database } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 import { FaqItem } from "@shared/schema";
 
 const CATEGORY_ICONS = {
@@ -16,6 +18,8 @@ const CATEGORY_ICONS = {
 
 export function FaqSearch() {
   const [searchQuery, setSearchQuery] = useState("");
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   // Fetch all FAQ items
   const { data: allFaqItems = [] } = useQuery<FaqItem[]>({
@@ -29,6 +33,28 @@ export function FaqSearch() {
   });
 
   const displayItems = searchQuery ? searchResults : allFaqItems.slice(0, 4);
+
+  // Send message mutation
+  const sendMessageMutation = useMutation({
+    mutationFn: async (content: string) => {
+      const response = await apiRequest("POST", "/api/messages", { content });
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/messages"] });
+      toast({
+        title: "Question sent",
+        description: "FAQ question added to chat",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: "Failed to send question. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
 
   const getIconForCategory = (category: string) => {
     const IconComponent = CATEGORY_ICONS[category as keyof typeof CATEGORY_ICONS] || FileText;
@@ -82,9 +108,10 @@ export function FaqSearch() {
                 variant="ghost"
                 className="w-full justify-start p-3 h-auto bg-gray-50 hover:bg-gray-100 transition-colors"
                 onClick={() => {
-                  // You could implement a feature to insert this FAQ question into the chat
                   console.log("FAQ item clicked:", item);
+                  sendMessageMutation.mutate(item.question);
                 }}
+                disabled={sendMessageMutation.isPending}
               >
                 <span className={`mr-2 flex-shrink-0 ${getColorForCategory(item.category)}`}>
                   {getIconForCategory(item.category)}
