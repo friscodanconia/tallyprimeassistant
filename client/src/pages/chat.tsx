@@ -37,16 +37,18 @@ export default function ChatPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-8rem)]">
           
           {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
-            <FaqSearch />
-            <QuickActions />
+          <div className="lg:col-span-1 space-y-6 overflow-hidden">
+            <div className="space-y-6 overflow-y-auto h-full">
+              <FaqSearch />
+              <QuickActions />
+            </div>
           </div>
           
           {/* Chat Interface */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 min-w-0">
             <ChatInterface />
           </div>
         </div>

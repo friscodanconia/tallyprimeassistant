@@ -86,14 +86,14 @@ export function FaqSearch() {
                   console.log("FAQ item clicked:", item);
                 }}
               >
-                <span className={`mr-2 ${getColorForCategory(item.category)}`}>
+                <span className={`mr-2 flex-shrink-0 ${getColorForCategory(item.category)}`}>
                   {getIconForCategory(item.category)}
                 </span>
-                <div className="text-left">
+                <div className="text-left min-w-0 flex-1">
                   <div className="text-sm font-medium truncate">
                     {item.question}
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-gray-500 truncate">
                     {item.category}
                   </div>
                 </div>

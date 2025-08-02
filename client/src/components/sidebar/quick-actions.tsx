@@ -70,29 +70,29 @@ export function QuickActions() {
         <Button
           onClick={handleSimulateVoucher}
           disabled={simulationMutation.isPending}
-          className="w-full flex items-center justify-start bg-blue-600 hover:bg-blue-700 text-white"
+          className="w-full flex items-center justify-start bg-blue-600 hover:bg-blue-700 text-white overflow-hidden"
         >
-          <Play className="h-4 w-4 mr-3" />
-          Simulate Voucher Entry
+          <Play className="h-4 w-4 mr-3 flex-shrink-0" />
+          <span className="truncate">Simulate Voucher Entry</span>
         </Button>
         
         <Button
           onClick={handleGenerateReport}
           disabled={simulationMutation.isPending}
-          className="w-full flex items-center justify-start bg-green-600 hover:bg-green-700 text-white"
+          className="w-full flex items-center justify-start bg-green-600 hover:bg-green-700 text-white overflow-hidden"
         >
-          <BarChart3 className="h-4 w-4 mr-3" />
-          Generate Sample Report
+          <BarChart3 className="h-4 w-4 mr-3 flex-shrink-0" />
+          <span className="truncate">Generate Sample Report</span>
         </Button>
         
         <Button
           onClick={handleClearChat}
           disabled={clearChatMutation.isPending}
           variant="outline"
-          className="w-full flex items-center justify-start border-gray-300 hover:bg-gray-50"
+          className="w-full flex items-center justify-start border-gray-300 hover:bg-gray-50 overflow-hidden"
         >
-          <Eraser className="h-4 w-4 mr-3" />
-          Clear Chat History
+          <Eraser className="h-4 w-4 mr-3 flex-shrink-0" />
+          <span className="truncate">Clear Chat History</span>
         </Button>
       </CardContent>
     </Card>

@@ -150,7 +150,7 @@ export function ChatInterface() {
           </div>
           <div className="flex items-center space-x-2">
             <Badge variant="secondary" className="bg-blue-100 text-blue-700">
-              Voice Enabled
+              AI Powered
             </Badge>
             <Button variant="ghost" size="sm" title="Export Chat">
               <Download className="h-4 w-4" />
@@ -197,7 +197,7 @@ export function ChatInterface() {
                       <li>• Simulated TallyPrime actions</li>
                     </ul>
                     <p className="text-sm text-gray-600">
-                      💬 Type a question or 🎤 use voice input to get started!
+                      💬 Type a question or click "Ask Question" to get started!
                     </p>
                   </div>
                 </div>
