@@ -28,7 +28,7 @@ export function SuggestedPrompts({ onSelectPrompt }: SuggestedPromptsProps) {
             key={index}
             variant="outline"
             size="sm"
-            className="text-xs h-auto py-2 px-3 rounded-lg border-tally-gray bg-white hover:bg-tally-blue-light hover:border-tally-blue text-gray-700 whitespace-normal text-left transition-all duration-200 tally-card-shadow"
+            className="text-xs h-auto py-2 px-3 rounded-lg border-2 border-tally-blue bg-white hover:bg-tally-blue-light hover:border-tally-blue-dark text-gray-700 whitespace-normal text-left transition-all duration-200 tally-card-shadow"
             onClick={() => onSelectPrompt(prompt)}
           >
             {prompt}
