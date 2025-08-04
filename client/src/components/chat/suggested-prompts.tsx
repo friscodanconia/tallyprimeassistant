@@ -19,13 +19,16 @@ const SUGGESTED_PROMPTS = [
 export function SuggestedPrompts({ onSelectPrompt }: SuggestedPromptsProps) {
   return (
     <div className="px-3 pb-3">
+      <div className="mb-2">
+        <p className="text-xs text-gray-600 font-medium">💡 Try these common questions:</p>
+      </div>
       <div className="flex flex-wrap gap-2">
         {SUGGESTED_PROMPTS.map((prompt, index) => (
           <Button
             key={index}
             variant="outline"
             size="sm"
-            className="text-xs h-auto py-1.5 px-3 rounded-full border-gray-200 bg-white hover:bg-gray-50 text-gray-700 whitespace-normal text-left"
+            className="text-xs h-auto py-2 px-3 rounded-lg border-tally-gray bg-white hover:bg-tally-blue-light hover:border-tally-blue text-gray-700 whitespace-normal text-left transition-all duration-200 tally-card-shadow"
             onClick={() => onSelectPrompt(prompt)}
           >
             {prompt}
