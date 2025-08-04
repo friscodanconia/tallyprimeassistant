@@ -7,10 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Message } from "./message";
-import { VoiceInput } from "./voice-input";
+import { SuggestedPrompts } from "./suggested-prompts";
 import { Message as MessageType } from "@shared/schema";
-
-// Removed suggested queries and quick actions since they're now in the sidebar
 
 export function ChatInterface() {
   const [inputMessage, setInputMessage] = useState("");
@@ -26,8 +24,8 @@ export function ChatInterface() {
 
   // Send message mutation
   const sendMessageMutation = useMutation({
-    mutationFn: async (content: string) => {
-      const response = await apiRequest("POST", "/api/messages", { content });
+    mutationFn: async (message: { content: string; type?: string }) => {
+      const response = await apiRequest("POST", "/api/messages", message);
       return response.json();
     },
     onSuccess: () => {
@@ -71,20 +69,25 @@ export function ChatInterface() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (inputMessage.trim() && !sendMessageMutation.isPending) {
-      sendMessageMutation.mutate(inputMessage.trim());
+      sendMessageMutation.mutate({
+        content: inputMessage.trim(),
+        type: "text"
+      });
     }
   };
 
-  // Handle voice transcript
-  const handleVoiceTranscript = (transcript: string) => {
-    setInputMessage(transcript);
-    // Auto-focus textarea after voice input
+  const handleSelectPrompt = (prompt: string) => {
+    setInputMessage(prompt);
+    // Submit the prompt automatically after a small delay
     setTimeout(() => {
-      textareaRef.current?.focus();
-    }, 100);
+      if (prompt.trim() && !sendMessageMutation.isPending) {
+        sendMessageMutation.mutate({
+          content: prompt.trim(),
+          type: "text"
+        });
+      }
+    }, 50);
   };
-
-  // Removed handlers for suggested queries and quick actions since they're now in the sidebar
 
   // Handle textarea auto-resize
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -160,20 +163,7 @@ export function ChatInterface() {
                   </div>
                 </div>
 
-                {/* Streamlined guidance */}
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Zap className="text-white h-4 w-4" />
-                  </div>
-                  <div className="bg-purple-50 rounded-2xl rounded-tl-sm p-4 max-w-md border border-purple-100">
-                    <div className="flex items-center mb-3">
-                      <Badge variant="secondary" className="bg-purple-100 text-purple-700">Getting Started</Badge>
-                    </div>
-                    <p className="text-sm text-gray-700">
-                      Use the sidebar to access Quick Actions and search FAQs, or simply type your question below.
-                    </p>
-                  </div>
-                </div>
+
               </div>
             ) : (
               messages.map((message) => (
@@ -213,7 +203,7 @@ export function ChatInterface() {
                 <Textarea
                   ref={textareaRef}
                   placeholder="Type your TallyPrime question here and press Enter to send..."
-                  className="resize-none pr-12 max-h-32 bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  className="resize-none pr-24 max-h-32 bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                   rows={1}
                   value={inputMessage}
                   onChange={handleTextareaChange}
@@ -226,14 +216,23 @@ export function ChatInterface() {
                 />
                 
                 <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                  <VoiceInput onTranscript={handleVoiceTranscript} />
+                  <button
+                    type="submit"
+                    disabled={!inputMessage.trim() || sendMessageMutation.isPending}
+                    className="p-1.5 rounded-full text-gray-400 hover:text-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Send message"
+                  >
+                    <Send className="h-4 w-4" />
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </form>
         
-        {/* Removed input suggestions - now handled by sidebar */}
+        {messages.length === 0 && (
+          <SuggestedPrompts onSelectPrompt={handleSelectPrompt} />
+        )}
       </div>
     </div>
   );

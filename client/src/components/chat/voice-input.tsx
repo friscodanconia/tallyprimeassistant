@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { MessageSquarePlus } from "lucide-react";
+import { Mic } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface VoiceInputProps {
@@ -32,12 +32,12 @@ export function VoiceInput({ onTranscript, className }: VoiceInputProps) {
       <DialogTrigger asChild>
         <Button
           type="button"
-          variant="outline"
-          size="sm"
-          className={`hover:bg-blue-50 ${className}`}
+          variant="ghost"
+          size="icon"
+          className={`h-8 w-8 p-0 ${className}`}
+          title="Voice input"
         >
-          <MessageSquarePlus className="w-4 h-4 mr-1" />
-          Ask Question
+          <Mic className="h-4 w-4" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
