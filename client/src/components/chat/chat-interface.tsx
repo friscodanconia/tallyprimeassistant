@@ -100,19 +100,19 @@ export function ChatInterface() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 h-[calc(100vh-4rem)] flex flex-col">
+    <div className="bg-white rounded-lg tally-card-shadow border border-gray-200 h-[calc(100vh-4rem)] flex flex-col">
       
-      {/* Minimal Chat Header */}
-      <div className="p-3 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-green-50">
+      {/* TallyPrime Chat Header */}
+      <div className="p-3 border-b border-gray-200 bg-tally-blue-light">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-6 h-6 bg-gradient-to-r from-blue-600 to-green-600 rounded-full flex items-center justify-center">
+            <div className="w-6 h-6 bg-tally-blue rounded-full flex items-center justify-center">
               <Calculator className="text-white h-3 w-3" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-gray-900">AI Assistant</h2>
+              <h2 className="text-sm font-semibold tally-blue-dark">TallyPrime Assistant</h2>
             </div>
-            <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+            <div className="w-1.5 h-1.5 bg-tally-green rounded-full animate-pulse"></div>
           </div>
           <div className="flex items-center space-x-1">
             <Button 
@@ -141,12 +141,12 @@ export function ChatInterface() {
               <div className="space-y-4">
                 {/* Welcome Message */}
                 <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 bg-tally-blue rounded-full flex items-center justify-center flex-shrink-0">
                     <Calculator className="text-white h-4 w-4" />
                   </div>
-                  <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-2xl rounded-tl-sm p-4 max-w-md border border-blue-100">
+                  <div className="bg-tally-blue-light rounded-2xl rounded-tl-sm p-4 max-w-md border border-tally-blue">
                     <div className="flex items-center mb-2">
-                      <Badge variant="secondary" className="bg-blue-100 text-blue-700">TallyPrime Assistant</Badge>
+                      <Badge variant="secondary" className="bg-tally-blue-light tally-blue-dark border-tally-blue">TallyPrime Assistant</Badge>
                     </div>
                     <p className="text-gray-800 mb-3">
                       Welcome to TallyPrime AI Assistant! 🎉 I can help you with:
@@ -174,15 +174,15 @@ export function ChatInterface() {
             {/* Typing indicator */}
             {sendMessageMutation.isPending && (
               <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 bg-tally-blue rounded-full flex items-center justify-center flex-shrink-0">
                   <Calculator className="text-white h-4 w-4" />
                 </div>
-                <div className="bg-gray-50 rounded-2xl rounded-tl-sm p-4 border border-gray-200">
+                <div className="bg-tally-blue-light rounded-2xl rounded-tl-sm p-4 border border-tally-blue">
                   <div className="flex items-center space-x-2">
                     <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce" style={{animationDelay: "0.1s"}}></div>
-                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: "0.2s"}}></div>
+                      <div className="w-2 h-2 bg-tally-blue rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-tally-green rounded-full animate-bounce" style={{animationDelay: "0.1s"}}></div>
+                      <div className="w-2 h-2 bg-tally-blue rounded-full animate-bounce" style={{animationDelay: "0.2s"}}></div>
                     </div>
                     <span className="text-sm text-gray-600">TallyPrime AI is thinking...</span>
                   </div>
@@ -195,7 +195,7 @@ export function ChatInterface() {
       </div>
 
       {/* Input Area */}
-      <div className="p-3 border-t border-gray-200 bg-gray-50">
+      <div className="p-3 border-t border-gray-200 bg-tally-sidebar">
         <form onSubmit={handleSubmit}>
           <div className="flex items-end space-x-3">
             <div className="flex-1">
@@ -203,7 +203,7 @@ export function ChatInterface() {
                 <Textarea
                   ref={textareaRef}
                   placeholder="Type your TallyPrime question here and press Enter to send..."
-                  className="resize-none pr-24 max-h-32 bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  className="resize-none pr-24 max-h-32 bg-white border-gray-300 focus:border-tally-blue focus:ring-tally-blue"
                   rows={1}
                   value={inputMessage}
                   onChange={handleTextareaChange}
@@ -219,7 +219,7 @@ export function ChatInterface() {
                   <button
                     type="submit"
                     disabled={!inputMessage.trim() || sendMessageMutation.isPending}
-                    className="p-1.5 rounded-full text-gray-400 hover:text-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-1.5 rounded-full text-gray-400 hover:text-tally-blue disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Send message"
                   >
                     <Send className="h-4 w-4" />

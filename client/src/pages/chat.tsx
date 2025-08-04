@@ -6,24 +6,24 @@ import { QuickActions } from "@/components/sidebar/quick-actions";
 
 export default function ChatPage() {
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Compact Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div className="min-h-screen bg-tally-sidebar">
+      {/* TallyPrime Header */}
+      <header className="bg-white border-b border-tally-gray tally-card-shadow sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-12">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-tally-blue rounded-lg flex items-center justify-center">
                 <Calculator className="text-white h-4 w-4" />
               </div>
               <div>
-                <h1 className="text-lg font-semibold text-gray-900">TallyPrime AI</h1>
+                <h1 className="text-lg font-semibold tally-blue-dark">TallyPrime AI Assistant</h1>
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                <Settings className="h-3 w-3" />
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-tally-blue-light">
+                <Settings className="h-3 w-3 tally-gray" />
               </Button>
-              <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
+              <div className="w-6 h-6 bg-tally-green rounded-full flex items-center justify-center">
                 <User className="h-3 w-3 text-white" />
               </div>
             </div>

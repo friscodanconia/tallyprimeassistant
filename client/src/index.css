@@ -24,10 +24,20 @@
   --ring: hsl(20, 14.3%, 4.1%);
   --radius: 0.5rem;
   
-  /* TallyPrime specific colors */
-  --tally-blue: hsl(221, 83%, 53%);
-  --tally-green: hsl(159, 75%, 40%);
-  --tally-red: hsl(0, 84%, 56%);
+  /* TallyPrime specific colors - Official Design System */
+  --tally-blue: hsl(217, 91%, 60%);     /* Primary Blue #3B82F6 */
+  --tally-blue-dark: hsl(217, 91%, 45%); /* Darker Blue #2563EB */
+  --tally-blue-light: hsl(217, 91%, 95%); /* Light Blue Background */
+  --tally-green: hsl(142, 76%, 36%);     /* Success Green #059669 */
+  --tally-green-light: hsl(142, 76%, 95%); /* Light Green Background */
+  --tally-red: hsl(0, 84%, 60%);         /* Error Red #EF4444 */
+  --tally-red-light: hsl(0, 84%, 95%);   /* Light Red Background */
+  --tally-orange: hsl(25, 95%, 53%);     /* Warning Orange #F97316 */
+  --tally-orange-light: hsl(25, 95%, 95%); /* Light Orange Background */
+  --tally-gray: hsl(220, 13%, 91%);      /* Border Gray #E5E7EB */
+  --tally-gray-dark: hsl(220, 13%, 69%); /* Text Gray #9CA3AF */
+  --tally-sidebar: hsl(220, 14%, 96%);   /* Sidebar Background */
+  --tally-card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
 .dark {
@@ -65,28 +75,98 @@
 }
 
 @layer utilities {
+  /* TallyPrime Blue Variants */
   .tally-blue {
     color: var(--tally-blue);
   }
-  
   .bg-tally-blue {
     background-color: var(--tally-blue);
   }
+  .tally-blue-dark {
+    color: var(--tally-blue-dark);
+  }
+  .bg-tally-blue-dark {
+    background-color: var(--tally-blue-dark);
+  }
+  .bg-tally-blue-light {
+    background-color: var(--tally-blue-light);
+  }
   
+  /* TallyPrime Green Variants */
   .tally-green {
     color: var(--tally-green);
   }
-  
   .bg-tally-green {
     background-color: var(--tally-green);
   }
+  .bg-tally-green-light {
+    background-color: var(--tally-green-light);
+  }
   
+  /* TallyPrime Red Variants */
   .tally-red {
     color: var(--tally-red);
   }
-  
   .bg-tally-red {
     background-color: var(--tally-red);
+  }
+  .bg-tally-red-light {
+    background-color: var(--tally-red-light);
+  }
+  
+  /* TallyPrime Orange Variants */
+  .tally-orange {
+    color: var(--tally-orange);
+  }
+  .bg-tally-orange {
+    background-color: var(--tally-orange);
+  }
+  .bg-tally-orange-light {
+    background-color: var(--tally-orange-light);
+  }
+  
+  /* TallyPrime Gray Variants */
+  .tally-gray {
+    color: var(--tally-gray-dark);
+  }
+  .bg-tally-gray {
+    background-color: var(--tally-gray);
+  }
+  .bg-tally-sidebar {
+    background-color: var(--tally-sidebar);
+  }
+  
+  /* TallyPrime Card Shadow */
+  .tally-card-shadow {
+    box-shadow: var(--tally-card-shadow);
+  }
+  
+  /* TallyPrime Button Styles */
+  .tally-btn-primary {
+    background-color: var(--tally-blue);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  .tally-btn-primary:hover {
+    background-color: var(--tally-blue-dark);
+  }
+  
+  .tally-btn-secondary {
+    background-color: var(--tally-sidebar);
+    color: var(--tally-blue);
+    border: 1px solid var(--tally-gray);
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .tally-btn-secondary:hover {
+    background-color: var(--tally-blue-light);
+    border-color: var(--tally-blue);
   }
 }
 
