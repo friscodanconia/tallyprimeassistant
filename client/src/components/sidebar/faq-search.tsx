@@ -60,16 +60,19 @@ export function FaqSearch() {
   };
 
   return (
-    <div className="space-y-2">
-      <h3 className="text-sm font-semibold text-gray-800 mb-3">FAQ Search</h3>
+    <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center">
+        <MessageSquare className="h-4 w-4 mr-2 text-blue-600" />
+        FAQ Search
+      </h3>
       
       <div className="relative mb-3">
         <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-gray-400" />
         <Input
-          placeholder="Search TallyPrime topics..."
+          placeholder="Search topics..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-7 h-8 text-xs"
+          className="pl-7 h-8 text-xs border-gray-300 focus:border-blue-500 focus:ring-blue-500"
         />
       </div>
       
@@ -88,9 +91,9 @@ export function FaqSearch() {
                 key={item.id}
                 onClick={() => sendMessageMutation.mutate(item.question)}
                 disabled={sendMessageMutation.isPending}
-                className="w-full flex items-center gap-2 px-3 py-2 text-left text-xs hover:bg-green-50 hover:text-green-700 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed group"
+                className="w-full flex items-center gap-2 px-3 py-2 text-left text-xs bg-gray-50 border border-gray-200 rounded-md hover:bg-blue-50 hover:border-blue-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed group"
               >
-                <IconComponent className="h-3.5 w-3.5 text-green-600 flex-shrink-0 group-hover:text-green-700" />
+                <IconComponent className="h-3.5 w-3.5 text-blue-600 flex-shrink-0 group-hover:text-blue-700" />
                 <div className="flex-1 min-w-0">
                   <span className="truncate block font-medium">{item.question}</span>
                   <span className="text-gray-500 text-xs truncate block">

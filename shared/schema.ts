@@ -57,3 +57,62 @@ export type ChatResponse = {
     confidence?: number;
   };
 };
+
+// Memory and Personalization types
+export interface UserProfile {
+  id: string;
+  name?: string;
+  company?: string;
+  industry?: string;
+  tallyVersion?: string;
+  preferredLanguage: 'english' | 'hindi';
+  experienceLevel: 'beginner' | 'intermediate' | 'advanced';
+  commonTopics: string[];
+  lastActive: Date;
+  createdAt: Date;
+}
+
+export interface UserPreferences {
+  userId: string;
+  responseStyle: 'concise' | 'detailed' | 'step-by-step';
+  showSteps: boolean;
+  includeExamples: boolean;
+  rememberContext: boolean;
+  notificationPreferences: {
+    newFeatures: boolean;
+    tips: boolean;
+    updates: boolean;
+  };
+  favoriteTopics: string[];
+  blockedTopics: string[];
+}
+
+export interface SessionInfo {
+  sessionId: string;
+  userId?: string;
+  createdAt: Date;
+}
+
+// API request/response types for memory features
+export interface CreateUserProfileRequest {
+  name?: string;
+  company?: string;
+  industry?: string;
+  tallyVersion?: string;
+  preferredLanguage?: 'english' | 'hindi';
+  experienceLevel?: 'beginner' | 'intermediate' | 'advanced';
+}
+
+export interface UpdateUserPreferencesRequest {
+  responseStyle?: 'concise' | 'detailed' | 'step-by-step';
+  showSteps?: boolean;
+  includeExamples?: boolean;
+  rememberContext?: boolean;
+  notificationPreferences?: {
+    newFeatures?: boolean;
+    tips?: boolean;
+    updates?: boolean;
+  };
+  favoriteTopics?: string[];
+  blockedTopics?: string[];
+}

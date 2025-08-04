@@ -1,5 +1,7 @@
 import { type Message, type CreateMessage, type FaqItem, type InsertFaqItem } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { extendedKnowledgeBase } from "./data/extended-knowledge";
+import { vectorSearchService } from "./services/vector-search";
 
 export interface IStorage {
   // Messages
@@ -25,6 +27,7 @@ export class MemStorage implements IStorage {
 
   private initializeFAQ() {
     const faqData = [
+      // INSTALLATION & UPGRADE (10 items)
       {
         question: "What are the differences between Tally.ERP 9 and TallyPrime?",
         answer: "TallyPrime has a redesigned interface with improved navigation, consistent shortcuts, a new Go To feature for global search, removed bottom toolbar (later reintroduced), and simplified Gateway of Tally. All your data from ERP 9 can be migrated seamlessly.",
@@ -300,11 +303,122 @@ export class MemStorage implements IStorage {
           { step: 3, description: "Set financial year and currency" },
           { step: 4, description: "Configure features like GST, Payroll as needed" }
         ]
+      },
+      {
+        question: "How to install TallyPrime on Windows?",
+        answer: "Download TallyPrime from official Tally website. Run the installer as administrator. Follow setup wizard, choose installation directory, and complete installation. Activate with license key.",
+        category: "Installation & Upgrade",
+        keywords: ["install", "windows", "setup", "download"],
+        steps: [
+          { step: 1, description: "Download TallyPrime installer from tally.com" },
+          { step: 2, description: "Run installer as administrator" },
+          { step: 3, description: "Follow setup wizard and choose directory" },
+          { step: 4, description: "Activate with valid license key" }
+        ]
+      },
+      {
+        question: "What are TallyPrime system requirements?",
+        answer: "Windows 7/8/10/11, 4GB RAM minimum (8GB recommended), 2GB free disk space, .NET Framework 4.7.2 or higher, and internet connection for activation and updates.",
+        category: "Installation & Upgrade",
+        keywords: ["system requirements", "minimum requirements", "hardware"],
+        steps: [
+          { step: 1, description: "Check Windows version (7/8/10/11 supported)" },
+          { step: 2, description: "Ensure 4GB+ RAM available" },
+          { step: 3, description: "Verify 2GB+ free disk space" },
+          { step: 4, description: "Install .NET Framework 4.7.2+" }
+        ]
+      },
+      {
+        question: "How to backup TallyPrime data?",
+        answer: "Go to Gateway > Backup. Select companies to backup, choose backup location, and click Backup. You can also use F11 > Data Configuration > Backup for advanced options.",
+        category: "Installation & Upgrade",
+        keywords: ["backup", "data backup", "restore", "data safety"],
+        steps: [
+          { step: 1, description: "Go to Gateway of Tally" },
+          { step: 2, description: "Select Backup option" },
+          { step: 3, description: "Choose companies and backup location" },
+          { step: 4, description: "Click Backup to complete process" }
+        ]
+      },
+      {
+        question: "How to restore TallyPrime data from backup?",
+        answer: "Go to Gateway > Restore. Select backup file location, choose companies to restore, and click Restore. Ensure TallyPrime is closed during restoration.",
+        category: "Installation & Upgrade",
+        keywords: ["restore", "data restore", "backup restore"],
+        steps: [
+          { step: 1, description: "Close TallyPrime completely" },
+          { step: 2, description: "Go to Gateway > Restore" },
+          { step: 3, description: "Select backup file location" },
+          { step: 4, description: "Choose companies and click Restore" }
+        ]
+      },
+      {
+        question: "How to update TallyPrime to latest version?",
+        answer: "Go to Help > TallyPrime Updates or press Ctrl+Alt+T. Download and install the latest update. Your data and settings will be preserved.",
+        category: "Installation & Upgrade",
+        keywords: ["update", "latest version", "upgrade", "patch"],
+        steps: [
+          { step: 1, description: "Press Ctrl+Alt+T or go to Help menu" },
+          { step: 2, description: "Select TallyPrime Updates" },
+          { step: 3, description: "Download latest update" },
+          { step: 4, description: "Install update (data preserved)" }
+        ]
+      },
+      {
+        question: "How to migrate data from Tally.ERP 9 to TallyPrime?",
+        answer: "Data migration is automatic. Install TallyPrime, and it will detect ERP 9 data. Select companies to migrate during first startup. All masters, transactions, and configurations are preserved.",
+        category: "Installation & Upgrade",
+        keywords: ["migrate", "ERP 9", "data migration", "transfer"],
+        steps: [
+          { step: 1, description: "Install TallyPrime on same system" },
+          { step: 2, description: "Launch TallyPrime for first time" },
+          { step: 3, description: "Select companies to migrate" },
+          { step: 4, description: "Migration completes automatically" }
+        ]
+      },
+      {
+        question: "How to activate TallyPrime license?",
+        answer: "Go to Help > Activate License. Enter Serial Number and Activation Key received from Tally. Ensure internet connection for online activation.",
+        category: "Installation & Upgrade",
+        keywords: ["activate", "license", "serial number", "activation key"],
+        steps: [
+          { step: 1, description: "Go to Help > Activate License" },
+          { step: 2, description: "Enter Serial Number" },
+          { step: 3, description: "Enter Activation Key" },
+          { step: 4, description: "Complete online activation" }
+        ]
+      },
+      {
+        question: "How to resolve TallyPrime activation issues?",
+        answer: "Check internet connection, verify license details, ensure system date is correct, and contact Tally support if issues persist. Use offline activation if online fails.",
+        category: "Installation & Upgrade",
+        keywords: ["activation issues", "license problems", "troubleshooting"],
+        steps: [
+          { step: 1, description: "Verify internet connection" },
+          { step: 2, description: "Check license details accuracy" },
+          { step: 3, description: "Ensure correct system date/time" },
+          { step: 4, description: "Try offline activation or contact support" }
+        ]
+      },
+      {
+        question: "How do I create a new company in TallyPrime?",
+        answer: "Go to Gateway of Tally > Create Company. Enter company name, mailing name, address, and other details. Set the financial year, base currency, and enable features like GST if required.",
+        category: "Company Management",
+        keywords: ["create company", "new company", "setup"],
+        steps: [
+          { step: 1, description: "From Gateway, select Create Company" },
+          { step: 2, description: "Enter company name and mailing details" },
+          { step: 3, description: "Set financial year and currency" },
+          { step: 4, description: "Configure features like GST, Payroll as needed" }
+        ]
       }
     ];
 
+    // Combine with extended knowledge base
+    const allKnowledgeData = [...faqData, ...extendedKnowledgeBase];
+
     // Initialize FAQ items in storage
-    faqData.forEach((item, index) => {
+    allKnowledgeData.forEach((item, index) => {
       const faqItem: FaqItem = {
         id: randomUUID(),
         question: item.question,
@@ -318,6 +432,12 @@ export class MemStorage implements IStorage {
     });
 
     console.log(`Initialized ${this.faqItems.size} FAQ items for TallyPrime`);
+    
+    // Initialize vector search with FAQ items
+    const faqItemsArray = Array.from(this.faqItems.values());
+    vectorSearchService.initialize(faqItemsArray).catch(error => {
+      console.error('Vector search initialization failed:', error);
+    });
   }
 
   async createMessage(message: CreateMessage): Promise<Message> {
@@ -345,6 +465,25 @@ export class MemStorage implements IStorage {
   }
 
   async searchFaq(query: string): Promise<FaqItem[]> {
+    try {
+      // Use vector search service for enhanced semantic search
+      const searchResults = await vectorSearchService.search(query, 10);
+      
+      // Log search performance for monitoring
+      const stats = vectorSearchService.getStats();
+      console.log(`🔍 FAQ Search: "${query}" - Found ${searchResults.length} results (Vector: ${stats.isInitialized ? 'ON' : 'OFF'})`);
+      
+      return searchResults.map(result => result.item);
+      
+    } catch (error) {
+      console.error('Vector search failed, using fallback:', error);
+      
+      // Fallback to basic keyword search if vector search fails
+      return this.fallbackKeywordSearch(query);
+    }
+  }
+
+  private fallbackKeywordSearch(query: string): FaqItem[] {
     const queryLower = query.toLowerCase();
     const results: Array<{ item: FaqItem; score: number }> = [];
 

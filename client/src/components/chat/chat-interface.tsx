@@ -1,15 +1,15 @@
 import { useState, useRef, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Send, Download, Settings, Zap } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
+import { Send, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { TallyLogo } from "@/components/ui/tally-logo";
+import { SuggestedPrompts } from "./suggested-prompts";
 import { apiRequest } from "@/lib/queryClient";
 import { Message } from "./message";
-import { SuggestedPrompts } from "./suggested-prompts";
 import { Message as MessageType } from "@shared/schema";
-import { TallyLogo } from "@/components/ui/tally-logo";
 
 export function ChatInterface() {
   const [inputMessage, setInputMessage] = useState("");
@@ -101,26 +101,29 @@ export function ChatInterface() {
   };
 
   return (
-    <div className="bg-white rounded-lg tally-card-shadow border border-gray-200 h-[calc(100vh-4rem)] flex flex-col">
-      
-      {/* TallyPrime Chat Header */}
-      <div className="p-3 border-b border-gray-200 bg-tally-blue-light">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <TallyLogo size="sm" showText={false} />
-            <div>
-              <h2 className="text-sm font-semibold tally-blue-dark">TallyPrime Assistant</h2>
+    <div className="tally-chat-container h-[calc(100vh-4rem)] flex flex-col">
+      {/* Premium TallyPrime Chat Header - Mobile Optimized */}
+      <div className="tally-chat-header">
+        <div className="flex flex-col space-y-3 md:flex-row md:items-center md:justify-between md:space-y-0">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+              <TallyLogo size="sm" showText={false} />
             </div>
-            <div className="w-1.5 h-1.5 bg-tally-green rounded-full animate-pulse"></div>
+            <div className="flex-1">
+              <h2 className="text-lg md:text-xl font-bold text-white leading-tight">TallyPrime Assistant</h2>
+              <p className="text-white/80 text-sm md:text-xs mt-1">AI-Powered Business Intelligence</p>
+            </div>
           </div>
-          <div className="flex items-center space-x-1">
-            <Button 
-              variant="ghost" 
-              size="sm" 
+          <div className="flex items-center justify-between md:justify-end space-x-2">
+            <div className="px-3 py-1.5 bg-white/20 rounded-full backdrop-blur-sm">
+              <span className="text-white text-xs font-medium">✨ Smart Assistant</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => clearChatMutation.mutate()}
               disabled={clearChatMutation.isPending}
-              title="Clear Chat"
-              className="h-6 px-2 text-xs"
+              className="text-xs text-white/70 hover:text-white px-3 py-1.5"
             >
               Clear
             </Button>
@@ -128,110 +131,124 @@ export function ChatInterface() {
         </div>
       </div>
 
-      {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {isLoading ? (
-          <div className="flex items-center justify-center h-32">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      {/* Enhanced Messages Area */}
+      <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-gray-50/50 to-white">
+        {isLoading && (
+          <div className="flex justify-center py-8">
+            <div className="tally-fade-in">
+              <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-200 border-t-blue-600"></div>
+              <p className="text-sm text-gray-600 mt-3 text-center">AI is thinking...</p>
+            </div>
           </div>
-        ) : (
-          <>
-            {messages.length === 0 ? (
-              <div className="space-y-4">
-                {/* Welcome Message */}
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0">
-                    <TallyLogo size="md" showText={false} />
-                  </div>
-                  <div className="bg-tally-blue-light rounded-2xl rounded-tl-sm p-4 max-w-md border border-tally-blue">
-                    <div className="flex items-center mb-2">
-                      <Badge variant="secondary" className="bg-tally-blue-light tally-blue-dark border-tally-blue">TallyPrime Assistant</Badge>
-                    </div>
-                    <p className="text-gray-800 mb-3">
-                      Welcome to TallyPrime AI Assistant! 🎉 I can help you with:
-                    </p>
-                    <ul className="text-sm text-gray-700 space-y-1 mb-3">
-                      <li>• Accounting queries and troubleshooting</li>
-                      <li>• Step-by-step TallyPrime guidance</li>
-                      <li>• GST, invoicing, and reporting help</li>
-                      <li>• Simulated TallyPrime actions</li>
-                    </ul>
-                    <p className="text-sm text-gray-600">
-                      Use the sidebar for quick actions or type your question below.
-                    </p>
-                  </div>
-                </div>
-
-
-              </div>
-            ) : (
-              messages.map((message) => (
-                <Message key={message.id} message={message} />
-              ))
-            )}
-            
-            {/* Typing indicator */}
-            {sendMessageMutation.isPending && (
-              <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0">
-                  <TallyLogo size="md" showText={false} />
-                </div>
-                <div className="bg-tally-blue-light rounded-2xl rounded-tl-sm p-4 border border-tally-blue">
-                  <div className="flex items-center space-x-2">
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-tally-blue rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-tally-green rounded-full animate-bounce" style={{animationDelay: "0.1s"}}></div>
-                      <div className="w-2 h-2 bg-tally-blue rounded-full animate-bounce" style={{animationDelay: "0.2s"}}></div>
-                    </div>
-                    <span className="text-sm text-gray-600">TallyPrime AI is thinking...</span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </>
         )}
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input Area */}
-      <div className="p-3 border-t border-gray-200 bg-tally-sidebar">
-        <form onSubmit={handleSubmit}>
-          <div className="flex items-end space-x-3">
-            <div className="flex-1">
-              <div className="relative">
-                <Textarea
-                  ref={textareaRef}
-                  placeholder="Type your TallyPrime question here and press Enter to send..."
-                  className="resize-none pr-24 max-h-32 bg-white border-gray-300 focus:border-tally-blue focus:ring-tally-blue"
-                  rows={1}
-                  value={inputMessage}
-                  onChange={handleTextareaChange}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSubmit(e);
-                    }
-                  }}
-                />
-                
-                <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                  <button
-                    type="submit"
-                    disabled={!inputMessage.trim() || sendMessageMutation.isPending}
-                    className="p-1.5 rounded-full text-gray-400 hover:text-tally-blue disabled:opacity-50 disabled:cursor-not-allowed"
-                    title="Send message"
-                  >
-                    <Send className="h-4 w-4" />
-                  </button>
+        
+        {messages.length === 0 && !isLoading && (
+          <div className="text-center py-12 tally-fade-in">
+            <div className="tally-card-premium p-8 max-w-md mx-auto">
+              <div className="mb-6">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
+                  <MessageCircle className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="tally-heading-lg mb-2">Welcome to TallyPrime Assistant</h3>
+                <p className="tally-text text-center">Your AI-powered business intelligence companion with memory and semantic search</p>
+              </div>
+              <div className="flex justify-center space-x-6 text-xs">
+                <div className="flex items-center space-x-1 text-green-600">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span>Always Available</span>
+                </div>
+                <div className="flex items-center space-x-1 text-blue-600">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                  <span>Instant Answers</span>
+                </div>
+                <div className="flex items-center space-x-1 text-purple-600">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                  <span>Expert Knowledge</span>
                 </div>
               </div>
             </div>
+            <div className="mt-8">
+              <SuggestedPrompts onSelectPrompt={handleSelectPrompt} />
+            </div>
           </div>
-        </form>
-        
-        {messages.length === 0 && (
-          <SuggestedPrompts onSelectPrompt={handleSelectPrompt} />
         )}
+
+        {messages.map((message, index) => (
+          <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} tally-slide-up`} style={{animationDelay: `${index * 100}ms`}}>
+            <div className={`max-w-[85%] ${
+              message.role === 'user' 
+                ? 'tally-chat-message tally-chat-message-user' 
+                : 'tally-chat-message tally-chat-message-assistant'
+            }`}>
+              <div className="flex items-start space-x-3">
+                {message.role === 'assistant' && (
+                  <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                    <TallyLogo size="sm" showText={false} />
+                  </div>
+                )}
+                <div className="flex-1">
+                  <div className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</div>
+                  {message.metadata?.steps && (
+                    <div className="mt-4 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-500">
+                      <div className="text-xs font-semibold text-blue-700 mb-2 flex items-center">
+                        <span className="mr-2">📋</span>
+                        Step-by-Step Guide:
+                      </div>
+                      <ol className="text-sm space-y-2">
+                        {message.metadata.steps.map((step: any, stepIndex: number) => (
+                          <li key={stepIndex} className="flex items-start">
+                            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-700 rounded-full text-xs font-bold flex items-center justify-center mr-3 mt-0.5">
+                              {step.step}
+                            </span>
+                            <span className="text-gray-700">{step.description}</span>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  )}
+                  {message.metadata?.faqMatch && (
+                    <div className="mt-2 flex items-center text-xs text-green-600">
+                      <span className="mr-1">✅</span>
+                      <span>Found in knowledge base</span>
+                    </div>
+                  )}
+                </div>
+                {message.role === 'user' && (
+                  <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-500 rounded-lg flex items-center justify-center text-white text-sm font-bold">
+                    U
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Premium Chat Input Area - Mobile Optimized */}
+      <div className="tally-chat-input-area border-t border-white/20 bg-white/10 backdrop-blur-sm">
+        <div className="flex items-center space-x-2 md:space-x-3 p-2 md:p-4">
+          <input
+            type="text"
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSubmit(e)}
+            placeholder="Type your TallyPrime question here and press Enter to send..."
+            className="flex-1 bg-white/90 border border-white/30 rounded-xl px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent tally-card-shadow transition-all duration-200"
+            disabled={sendMessageMutation.isPending}
+          />
+          <Button
+            onClick={() => handleSubmit(new Event('submit') as any)}
+            disabled={!inputMessage.trim() || sendMessageMutation.isPending}
+            className="bg-white/20 hover:bg-white/30 text-white border border-white/30 rounded-xl px-3 md:px-6 py-2.5 md:py-3 font-medium transition-all duration-200 tally-card-shadow disabled:opacity-50 flex-shrink-0"
+          >
+            {sendMessageMutation.isPending ? (
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Send className="w-4 h-4" />
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   );

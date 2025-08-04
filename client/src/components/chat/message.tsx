@@ -67,16 +67,16 @@ export function Message({ message }: MessageProps) {
       isUser ? "justify-end" : "justify-start"
     )}>
       {!isUser && (
-        <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+        <div className="w-8 h-8 bg-gradient-to-r from-tally-blue to-tally-green rounded-full flex items-center justify-center flex-shrink-0 border-2 border-white tally-card-shadow">
           <Bot className="h-4 w-4 text-white" />
         </div>
       )}
       
       <div className={cn(
-        "rounded-2xl p-4 max-w-2xl",
+        "rounded-2xl p-4 max-w-2xl border-2 tally-card-shadow",
         isUser 
-          ? "bg-blue-600 text-white rounded-tr-sm" 
-          : "bg-gray-50 rounded-tl-sm"
+          ? "bg-gradient-to-r from-tally-blue to-tally-blue-dark text-white rounded-tr-sm border-tally-blue" 
+          : "bg-gradient-to-br from-white via-tally-blue-light to-white rounded-tl-sm border-tally-blue"
       )}>
         {!isUser && message.type !== "text" && (
           <div className="flex items-center space-x-2 mb-3">
@@ -143,7 +143,7 @@ export function Message({ message }: MessageProps) {
       </div>
       
       {isUser && (
-        <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+        <div className="w-8 h-8 bg-gradient-to-r from-tally-green to-tally-green-dark rounded-full flex items-center justify-center flex-shrink-0 border-2 border-white tally-card-shadow">
           <User className="h-4 w-4 text-white" />
         </div>
       )}

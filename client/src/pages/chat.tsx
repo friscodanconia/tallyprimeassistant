@@ -1,42 +1,79 @@
-import { Settings, HelpCircle, User } from "lucide-react";
+import { Settings, HelpCircle, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChatInterface } from "@/components/chat/chat-interface";
 import { FaqSearch } from "@/components/sidebar/faq-search";
 import { QuickActions } from "@/components/sidebar/quick-actions";
 import { TallyLogo } from "@/components/ui/tally-logo";
+import { useState } from "react";
 
 export default function ChatPage() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-tally-sidebar">
+    <div className="min-h-screen" style={{background: 'linear-gradient(135deg, #4A90E2 0%, #357ABD 50%, #2E5F8F 100%)'}}>
       {/* TallyPrime Header */}
-      <header className="bg-white border-b border-tally-gray tally-card-shadow sticky top-0 z-50">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-12">
-            <div className="flex items-center space-x-2">
-              <TallyLogo size="md" showText={false} />
-              <div>
-                <h1 className="text-lg font-semibold tally-blue-dark">TallyPrime AI Assistant</h1>
-              </div>
+          <div className="flex justify-between items-center h-14">
+            <div className="flex items-center space-x-3">
+              <TallyLogo size="sm" showText={false} />
+              <h1 className="text-lg font-semibold text-gray-900 hidden sm:block">TallyPrime AI Assistant</h1>
+              <h1 className="text-base font-semibold text-gray-900 sm:hidden">TallyPrime AI</h1>
             </div>
             <div className="flex items-center space-x-2">
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-tally-blue-light">
-                <Settings className="h-3 w-3 tally-gray" />
+              {/* Mobile Menu Button */}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="lg:hidden p-2"
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+              >
+                {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </Button>
-              <div className="w-6 h-6 bg-tally-green rounded-full flex items-center justify-center">
-                <User className="h-3 w-3 text-white" />
+              <Button variant="ghost" size="sm" className="p-2 hidden sm:flex">
+                <HelpCircle className="h-4 w-4" />
+              </Button>
+              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                <User className="h-4 w-4 text-white" />
               </div>
             </div>
           </div>
         </div>
       </header>
 
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div className="lg:hidden fixed inset-0 z-40" onClick={() => setSidebarOpen(false)}>
+          <div className="absolute inset-0 bg-gray-600 bg-opacity-75 transition-opacity" />
+          <div className="fixed right-0 top-0 bottom-0 w-80 bg-white shadow-xl overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-semibold text-gray-900">Menu</h2>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setSidebarOpen(false)}
+                  className="p-2"
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+              <div className="space-y-6">
+                <FaqSearch />
+                <QuickActions />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-2">
         <div className="grid grid-cols-1 xl:grid-cols-6 lg:grid-cols-4 gap-3 h-[calc(100vh-4rem)]">
           
-          {/* Compact Sidebar */}
+          {/* Desktop Sidebar */}
           <div className="xl:col-span-1 lg:col-span-1 hidden lg:block overflow-hidden">
-            <div className="space-y-2 overflow-y-auto h-full">
+            <div className="space-y-4 overflow-y-auto h-full">
               <FaqSearch />
               <QuickActions />
             </div>

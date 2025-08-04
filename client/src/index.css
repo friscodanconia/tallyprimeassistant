@@ -24,20 +24,93 @@
   --ring: hsl(20, 14.3%, 4.1%);
   --radius: 0.5rem;
   
-  /* TallyPrime specific colors - Official Design System */
-  --tally-blue: hsl(217, 91%, 60%);     /* Primary Blue #3B82F6 */
-  --tally-blue-dark: hsl(217, 91%, 45%); /* Darker Blue #2563EB */
-  --tally-blue-light: hsl(217, 91%, 95%); /* Light Blue Background */
+  /* TallyPrime Enhanced Design System - Premium Visual Identity */
+  
+  /* Primary Brand Colors - Rich and Distinctive */
+  --tally-blue: hsl(217, 91%, 55%);      /* Primary Blue #2563EB */
+  --tally-blue-dark: hsl(217, 91%, 40%); /* Deep Blue #1D4ED8 */
+  --tally-blue-darker: hsl(217, 91%, 30%); /* Darkest Blue #1E40AF */
+  --tally-blue-light: hsl(217, 91%, 92%); /* Light Blue #DBEAFE */
+  --tally-blue-lighter: hsl(217, 91%, 97%); /* Lightest Blue #F0F9FF */
+  
+  /* Secondary Brand Colors - Professional Palette */
   --tally-green: hsl(142, 76%, 36%);     /* Success Green #059669 */
-  --tally-green-light: hsl(142, 76%, 95%); /* Light Green Background */
-  --tally-red: hsl(0, 84%, 60%);         /* Error Red #EF4444 */
-  --tally-red-light: hsl(0, 84%, 95%);   /* Light Red Background */
+  --tally-green-dark: hsl(142, 76%, 28%); /* Dark Green #047857 */
+  --tally-green-light: hsl(142, 76%, 92%); /* Light Green #D1FAE5 */
+  --tally-green-lighter: hsl(142, 76%, 97%); /* Lightest Green #F0FDF4 */
+  
+  --tally-red: hsl(0, 84%, 55%);         /* Error Red #DC2626 */
+  --tally-red-dark: hsl(0, 84%, 45%);    /* Dark Red #B91C1C */
+  --tally-red-light: hsl(0, 84%, 92%);   /* Light Red #FEE2E2 */
+  
   --tally-orange: hsl(25, 95%, 53%);     /* Warning Orange #F97316 */
-  --tally-orange-light: hsl(25, 95%, 95%); /* Light Orange Background */
-  --tally-gray: hsl(220, 13%, 91%);      /* Border Gray #E5E7EB */
-  --tally-gray-dark: hsl(220, 13%, 69%); /* Text Gray #9CA3AF */
-  --tally-sidebar: hsl(220, 14%, 96%);   /* Sidebar Background */
-  --tally-card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --tally-orange-dark: hsl(25, 95%, 43%); /* Dark Orange #EA580C */
+  --tally-orange-light: hsl(25, 95%, 92%); /* Light Orange #FED7AA */
+  
+  /* Neutral Colors - Rich Grays */
+  --tally-gray-50: hsl(220, 14%, 98%);   /* Lightest Gray #FAFBFC */
+  --tally-gray-100: hsl(220, 14%, 96%);  /* Very Light Gray #F4F6F8 */
+  --tally-gray-200: hsl(220, 13%, 91%);  /* Light Gray #E5E7EB */
+  --tally-gray-300: hsl(220, 13%, 82%);  /* Medium Light Gray #D1D5DB */
+  --tally-gray-400: hsl(220, 13%, 69%);  /* Medium Gray #9CA3AF */
+  --tally-gray-500: hsl(220, 13%, 56%);  /* Text Gray #6B7280 */
+  --tally-gray-600: hsl(220, 13%, 45%);  /* Dark Text Gray #4B5563 */
+  --tally-gray-700: hsl(220, 13%, 35%);  /* Darker Gray #374151 */
+  --tally-gray-800: hsl(220, 13%, 25%);  /* Very Dark Gray #1F2937 */
+  --tally-gray-900: hsl(220, 13%, 15%);  /* Darkest Gray #111827 */
+  
+  /* Premium Gradients */
+  --tally-gradient-primary: linear-gradient(135deg, var(--tally-blue) 0%, var(--tally-blue-dark) 100%);
+  --tally-gradient-secondary: linear-gradient(135deg, var(--tally-green) 0%, var(--tally-green-dark) 100%);
+  --tally-gradient-accent: linear-gradient(135deg, var(--tally-orange) 0%, var(--tally-orange-dark) 100%);
+  --tally-gradient-neutral: linear-gradient(135deg, var(--tally-gray-100) 0%, var(--tally-gray-200) 100%);
+  /* Custom background for mobile - TallyPrime Official Blue Gradient */
+  --mobile-bg: linear-gradient(135deg, #4A90E2 0%, #357ABD 50%, #2E5F8F 100%);
+  /* Alternative TallyPrime hero gradient for mobile */
+  --mobile-bg-hero: linear-gradient(135deg, var(--tally-blue) 0%, var(--tally-blue-dark) 50%, var(--tally-blue-darker) 100%);
+  
+  /* Enhanced Shadows - Depth and Premium Feel */
+  --tally-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tally-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
+  --tally-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
+  --tally-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
+  --tally-shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --tally-shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.06);
+  --tally-shadow-glow: 0 0 20px rgb(37 99 235 / 0.3);
+  
+  /* Typography Scale */
+  --tally-font-size-xs: 0.75rem;   /* 12px */
+  --tally-font-size-sm: 0.875rem;  /* 14px */
+  --tally-font-size-base: 1rem;    /* 16px */
+  --tally-font-size-lg: 1.125rem;  /* 18px */
+  --tally-font-size-xl: 1.25rem;   /* 20px */
+  --tally-font-size-2xl: 1.5rem;   /* 24px */
+  --tally-font-size-3xl: 1.875rem; /* 30px */
+  --tally-font-size-4xl: 2.25rem;  /* 36px */
+  
+  /* Spacing Scale */
+  --tally-space-1: 0.25rem;  /* 4px */
+  --tally-space-2: 0.5rem;   /* 8px */
+  --tally-space-3: 0.75rem;  /* 12px */
+  --tally-space-4: 1rem;     /* 16px */
+  --tally-space-5: 1.25rem;  /* 20px */
+  --tally-space-6: 1.5rem;   /* 24px */
+  --tally-space-8: 2rem;     /* 32px */
+  --tally-space-10: 2.5rem;  /* 40px */
+  --tally-space-12: 3rem;    /* 48px */
+  
+  /* Border Radius Scale */
+  --tally-radius-sm: 0.25rem;  /* 4px */
+  --tally-radius-md: 0.375rem; /* 6px */
+  --tally-radius-lg: 0.5rem;   /* 8px */
+  --tally-radius-xl: 0.75rem;  /* 12px */
+  --tally-radius-2xl: 1rem;    /* 16px */
+  --tally-radius-full: 9999px;
+  
+  /* Animation Durations */
+  --tally-duration-fast: 150ms;
+  --tally-duration-normal: 300ms;
+  --tally-duration-slow: 500ms;
 }
 
 .dark {

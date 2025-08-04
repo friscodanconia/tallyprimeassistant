@@ -11,6 +11,12 @@ export async function processUserQuery(query: string, faqResults: any[]): Promis
     // Check if we have FAQ matches
     const hasFaqMatch = faqResults.length > 0;
     
+    // Check if this is a simulation request
+    const isSimulationRequest = query.toLowerCase().includes('simulation') || 
+                              query.toLowerCase().includes('show me how to') ||
+                              query.toLowerCase().includes('generate a tallyprime') ||
+                              query.toLowerCase().includes('simulate');
+    
     let systemPrompt = `You are an expert TallyPrime accounting software assistant. You help users with accounting queries, provide step-by-step guidance, and can simulate TallyPrime actions.
 
 IMPORTANT: Always respond in JSON format with the following structure:
@@ -27,14 +33,18 @@ IMPORTANT: Always respond in JSON format with the following structure:
 
 Response Types:
 - "faq": When answering based on FAQ knowledge
-- "simulation": When demonstrating TallyPrime interface/actions
+- "simulation": When demonstrating TallyPrime interface/actions (USE THIS when user asks for simulations, demonstrations, or "show me how to")
 - "text": For general responses
 - "error": When query cannot be understood
 
-For TallyPrime simulations, create ASCII-style interfaces that show what the user would see in TallyPrime.`;
+For TallyPrime simulations, create detailed step-by-step guides with realistic TallyPrime interface descriptions. Always set type to "simulation" when user asks for demonstrations.`;
 
     if (hasFaqMatch) {
       systemPrompt += `\n\nRelevant FAQ found: ${JSON.stringify(faqResults[0])}`;
+    }
+
+    if (isSimulationRequest) {
+      systemPrompt += `\n\nIMPORTANT: This is a simulation request. Set "type": "simulation" and provide detailed TallyPrime interface simulation.`;
     }
 
     const response = await openai.chat.completions.create({
@@ -48,6 +58,11 @@ For TallyPrime simulations, create ASCII-style interfaces that show what the use
     });
 
     const result = JSON.parse(response.choices[0].message.content || "{}");
+    
+    // Force simulation type if we detected it's a simulation request
+    if (isSimulationRequest && result.type !== "simulation") {
+      result.type = "simulation";
+    }
     
     return {
       content: result.content || "I couldn't process your request. Please try again.",
@@ -70,141 +85,81 @@ For TallyPrime simulations, create ASCII-style interfaces that show what the use
 
 export async function generateTallySimulation(action: string): Promise<ChatResponse> {
   try {
-    // Create pre-built simulations for common actions
-    const simulationMap: { [key: string]: ChatResponse } = {
-      "Create a new voucher entry": {
-        content: "Here's a TallyPrime voucher entry simulation. This shows how to create a sales voucher with GST calculations, item details, and proper accounting entries.",
-        type: "simulation",
-        metadata: {
-          simulation: "voucher_entry",
-          confidence: 0.95
-        }
-      },
-      "Generate a sample financial report": {
-        content: "Here's a TallyPrime Day Book report simulation. This shows daily transaction summaries with voucher details and amounts.",
-        type: "simulation", 
-        metadata: {
-          simulation: "day_book",
-          confidence: 0.95
-        }
-      },
-      "Open Balance Sheet": {
-        content: "Here's a TallyPrime Balance Sheet simulation. This shows the company's financial position with assets and liabilities properly categorized.",
-        type: "simulation",
-        metadata: {
-          simulation: "balance_sheet",
-          confidence: 0.95
-        }
-      },
-      "Create Sales Invoice": {
-        content: "Here's a TallyPrime Sales Invoice simulation. This shows how to generate a GST-compliant invoice with proper formatting and tax calculations.",
-        type: "simulation",
-        metadata: {
-          simulation: "sales_invoice",
-          confidence: 0.95
-        }
-      },
-      "Open ledger account view": {
-        content: "Here's a TallyPrime Ledger Account simulation. This displays account transactions with running balances and detailed entries.",
-        type: "simulation",
-        metadata: {
-          simulation: "day_book",
-          confidence: 0.95
-        }
-      },
-      "Generate trial balance report": {
-        content: "Here's a TallyPrime Trial Balance simulation. This shows all account balances to verify that debits equal credits.",
-        type: "simulation",
-        metadata: {
-          simulation: "balance_sheet",
-          confidence: 0.95
-        }
-      },
-      "View customer master data": {
-        content: "Here's a TallyPrime Customer Master simulation. This displays customer information, outstanding balances, and contact details.",
-        type: "simulation",
-        metadata: {
-          simulation: "day_book",
-          confidence: 0.95
-        }
-      },
-      "Display stock summary report": {
-        content: "Here's a TallyPrime Stock Summary simulation. This shows inventory levels, stock values, and item details.",
-        type: "simulation",
-        metadata: {
-          simulation: "day_book",
-          confidence: 0.95
-        }
-      },
-      "Create payment voucher": {
-        content: "Here's a TallyPrime Payment Voucher simulation. This shows how to record payments with proper accounting entries.",
-        type: "simulation",
-        metadata: {
-          simulation: "voucher_entry",
-          confidence: 0.95
-        }
-      },
-      "Generate profit and loss statement": {
-        content: "Here's a TallyPrime Profit & Loss Statement simulation. This displays revenue, expenses, and net profit calculations.",
-        type: "simulation",
-        metadata: {
-          simulation: "balance_sheet",
-          confidence: 0.95
-        }
-      },
-      "View company information": {
-        content: "Here's a TallyPrime Company Information simulation. This shows company details, configuration settings, and master data.",
-        type: "simulation",
-        metadata: {
-          simulation: "day_book",
-          confidence: 0.95
-        }
-      },
-      "Open TallyPrime configuration": {
-        content: "Here's a TallyPrime Configuration simulation. This displays various settings and customization options for the software.",
-        type: "simulation",
-        metadata: {
-          simulation: "day_book",
-          confidence: 0.95
-        }
-      }
-    };
-
-    // Check if we have a pre-built simulation
-    if (simulationMap[action]) {
-      return simulationMap[action];
+    if (!openai) {
+      throw new Error("OpenAI client not initialized");
     }
 
-    // Fallback for other actions
-    const lowerAction = action.toLowerCase();
-    let simulationType = "voucher";
-    let content = `Here's a TallyPrime simulation for: ${action}`;
+    const systemPrompt = `You are a TallyPrime expert creating authentic, interface-accurate simulations. Generate content that EXACTLY mirrors the real TallyPrime interface, terminology, and user experience.
 
-    if (lowerAction.includes("balance") || lowerAction.includes("balance sheet")) {
-      simulationType = "balance_sheet";
-      content = "Here's a TallyPrime Balance Sheet simulation showing your company's financial position.";
-    } else if (lowerAction.includes("invoice") || lowerAction.includes("sales")) {
-      simulationType = "invoice";
-      content = "Here's a TallyPrime Sales Invoice simulation with GST calculations.";
-    } else if (lowerAction.includes("report") || lowerAction.includes("day book")) {
-      simulationType = "report";
-      content = "Here's a TallyPrime Day Book report showing daily transactions.";
-    }
+**CRITICAL: Use AUTHENTIC TallyPrime Interface Elements:**
+
+**Navigation Patterns:**
+- Gateway of Tally → [Main Menu] → [Sub Menu]
+- Use exact TallyPrime menu names: "Accounts Info", "Inventory Info", "Vouchers", "Display"
+- Function keys: F1 (Help), F2 (Date), F3 (Company), F4 (Contra), F5 (Payment), F6 (Receipt), F7 (Journal), F8 (Sales), F9 (Purchase), F10 (Reversing Journal), F11 (Features), F12 (Configure)
+
+**Screen Layout Simulation:**
+- Show actual TallyPrime screen headers with company name and date
+- Use TallyPrime's distinctive blue headers and white forms
+- Include status bar information (Tally.ERP 9, Company: [Name], Date: [DD-MMM-YYYY])
+- Show field labels exactly as they appear: "Party A/c Name", "Dr/Cr", "Amount", "Narration"
+
+**Authentic TallyPrime Elements:**
+- Use TallyPrime's specific terminology: "Ledger", "Group", "Voucher Type", "Stock Item", "Godown"
+- Show actual field formats: Date (DD-MMM-YYYY), Amount (₹ with commas)
+- Include TallyPrime's validation messages and prompts
+- Use TallyPrime's keyboard shortcuts and navigation patterns
+
+**Sample Data Requirements:**
+- Use realistic Indian business names, GST numbers (15-digit format)
+- Include proper HSN codes, tax rates (5%, 12%, 18%, 28%)
+- Show authentic accounting entries with proper Dr/Cr format
+- Use real TallyPrime voucher numbers and reference formats
+
+**Visual Formatting:**
+- Use ASCII-style tables to represent TallyPrime screens
+- Show field boundaries with | and - characters
+- Highlight selected fields with [ ] brackets
+- Include TallyPrime's distinctive prompt messages
+
+IMPORTANT: Make simulations so authentic that users feel they're looking at actual TallyPrime screens. Include exact button names, field labels, and navigation paths as they appear in the software.`;
+
+    const userPrompt = `Create a detailed TallyPrime simulation for: "${action}"
+
+Provide comprehensive step-by-step instructions with sample data and expected results. Make it practical and actionable for someone using TallyPrime software.`;
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt }
+      ],
+      temperature: 0.7,
+      max_tokens: 2000
+    });
+
+    const content = completion.choices[0]?.message?.content || "Unable to generate simulation.";
 
     return {
       content,
       type: "simulation",
       metadata: {
-        simulation: simulationType,
-        confidence: 0.95
+        simulation: action.toLowerCase().replace(/\s+/g, '_'),
+        confidence: 0.95,
+        generated_by: "openai",
+        action: action
       }
     };
+
   } catch (error) {
-    console.error("Simulation generation error:", error);
+    console.error("Error generating TallyPrime simulation:", error);
     return {
-      content: "Unable to generate simulation at the moment.",
+      content: "I apologize, but I encountered an error while generating the TallyPrime simulation. Please try again.",
       type: "error",
-      metadata: { confidence: 0.1 }
+      metadata: {
+        error: "simulation_failed",
+        confidence: 0.0
+      }
     };
   }
 }

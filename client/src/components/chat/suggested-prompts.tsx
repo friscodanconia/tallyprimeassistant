@@ -18,17 +18,19 @@ const SUGGESTED_PROMPTS = [
 
 export function SuggestedPrompts({ onSelectPrompt }: SuggestedPromptsProps) {
   return (
-    <div className="px-3 pb-3">
-      <div className="mb-2">
-        <p className="text-xs text-gray-600 font-medium">💡 Try these common questions:</p>
+    <div className="bg-gradient-to-r from-tally-blue-light via-white to-tally-blue-light border-2 border-tally-blue rounded-xl p-3 md:p-4 mx-0 md:mx-3 mb-3 tally-card-shadow">
+      <div className="mb-3">
+        <p className="text-sm font-bold tally-blue-dark flex items-center">
+          💡 <span className="ml-2">Try these common questions:</span>
+        </p>
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
         {SUGGESTED_PROMPTS.map((prompt, index) => (
           <Button
             key={index}
             variant="outline"
             size="sm"
-            className="text-xs h-auto py-2 px-3 rounded-lg border-2 border-tally-blue bg-white hover:bg-tally-blue-light hover:border-tally-blue-dark text-gray-700 whitespace-normal text-left transition-all duration-200 tally-card-shadow"
+            className="text-xs h-auto py-3 px-4 rounded-lg border-2 border-tally-blue bg-gradient-to-r from-white to-tally-blue-light hover:bg-gradient-to-r hover:from-tally-blue-light hover:to-tally-blue hover:text-white hover:border-tally-blue-dark text-gray-700 whitespace-normal text-left transition-all duration-200 tally-card-shadow font-medium"
             onClick={() => onSelectPrompt(prompt)}
           >
             {prompt}
