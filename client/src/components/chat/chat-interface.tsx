@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Send, Download, Settings, Calculator, Zap } from "lucide-react";
+import { Send, Download, Settings, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +9,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { Message } from "./message";
 import { SuggestedPrompts } from "./suggested-prompts";
 import { Message as MessageType } from "@shared/schema";
+import { TallyLogo } from "@/components/ui/tally-logo";
 
 export function ChatInterface() {
   const [inputMessage, setInputMessage] = useState("");
@@ -106,9 +107,7 @@ export function ChatInterface() {
       <div className="p-3 border-b border-gray-200 bg-tally-blue-light">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-6 h-6 bg-tally-blue rounded-full flex items-center justify-center">
-              <Calculator className="text-white h-3 w-3" />
-            </div>
+            <TallyLogo size="sm" showText={false} />
             <div>
               <h2 className="text-sm font-semibold tally-blue-dark">TallyPrime Assistant</h2>
             </div>
@@ -141,8 +140,8 @@ export function ChatInterface() {
               <div className="space-y-4">
                 {/* Welcome Message */}
                 <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-tally-blue rounded-full flex items-center justify-center flex-shrink-0">
-                    <Calculator className="text-white h-4 w-4" />
+                  <div className="flex-shrink-0">
+                    <TallyLogo size="md" showText={false} />
                   </div>
                   <div className="bg-tally-blue-light rounded-2xl rounded-tl-sm p-4 max-w-md border border-tally-blue">
                     <div className="flex items-center mb-2">
@@ -174,8 +173,8 @@ export function ChatInterface() {
             {/* Typing indicator */}
             {sendMessageMutation.isPending && (
               <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-tally-blue rounded-full flex items-center justify-center flex-shrink-0">
-                  <Calculator className="text-white h-4 w-4" />
+                <div className="flex-shrink-0">
+                  <TallyLogo size="md" showText={false} />
                 </div>
                 <div className="bg-tally-blue-light rounded-2xl rounded-tl-sm p-4 border border-tally-blue">
                   <div className="flex items-center space-x-2">

@@ -57,9 +57,9 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // Force port 3000
-  const port = 3000;
-  server.listen(port, "0.0.0.0", () => {
+  // Use environment PORT or default to 3000
+  const port = parseInt(process.env.PORT || '3000', 10);
+  server.listen(port, () => {
     log(`Server is running on port ${port}`);
   });
 })();

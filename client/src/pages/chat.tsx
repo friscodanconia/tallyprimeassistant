@@ -1,8 +1,9 @@
-import { Calculator, Settings, HelpCircle, User } from "lucide-react";
+import { Settings, HelpCircle, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChatInterface } from "@/components/chat/chat-interface";
 import { FaqSearch } from "@/components/sidebar/faq-search";
 import { QuickActions } from "@/components/sidebar/quick-actions";
+import { TallyLogo } from "@/components/ui/tally-logo";
 
 export default function ChatPage() {
   return (
@@ -12,9 +13,7 @@ export default function ChatPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-12">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-tally-blue rounded-lg flex items-center justify-center">
-                <Calculator className="text-white h-4 w-4" />
-              </div>
+              <TallyLogo size="md" showText={false} />
               <div>
                 <h1 className="text-lg font-semibold tally-blue-dark">TallyPrime AI Assistant</h1>
               </div>
