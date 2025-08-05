@@ -1,4 +1,4 @@
-import { Settings, HelpCircle, User, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChatInterface } from "@/components/chat/chat-interface";
 import { FaqSearch } from "@/components/sidebar/faq-search";
@@ -30,12 +30,6 @@ export default function ChatPage() {
               >
                 {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </Button>
-              <Button variant="ghost" size="sm" className="p-2 hidden sm:flex">
-                <HelpCircle className="h-4 w-4" />
-              </Button>
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                <User className="h-4 w-4 text-white" />
-              </div>
             </div>
           </div>
         </div>
