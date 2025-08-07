@@ -1,6 +1,12 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { storage } from '../server/storage.js';
-import { processUserQuery } from '../server/services/openai.js';
+import OpenAI from 'openai';
+
+const openai = new OpenAI({ 
+  apiKey: process.env.OPENAI_API_KEY || "demo_key"
+});
+
+// In-memory storage for demo
+const messages: any[] = [];
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
@@ -16,7 +22,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     if (req.method === 'GET') {
       // Get all messages
-      const messages = await storage.getMessages();
       return res.json(messages);
     }
 
@@ -29,38 +34,76 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
 
       // Add user message
-      const userMessage = await storage.createMessage({
+      const userMessage = {
+        id: `msg-${Date.now()}-user`,
         content,
         role: 'user',
         type,
-      });
+        createdAt: new Date(),
+        metadata: null
+      };
+      messages.push(userMessage);
 
-      // Get FAQ results for context
-      const faqResults = await storage.searchFaq(content);
-      
-      // Generate AI response
-      const aiResponse = await processUserQuery(content, faqResults);
+      // Generate AI response using OpenAI
+      const aiResponse = await generateAIResponse(content);
       
       // Add AI message
-      const aiMessage = await storage.createMessage({
+      const aiMessage = {
+        id: `msg-${Date.now()}-assistant`,
         content: aiResponse.content,
         role: 'assistant',
         type: aiResponse.type || 'text',
-        metadata: aiResponse.metadata,
-      });
+        createdAt: new Date(),
+        metadata: aiResponse.metadata
+      };
+      messages.push(aiMessage);
 
       return res.json({ userMessage, aiMessage });
     }
 
     if (req.method === 'DELETE') {
       // Clear all messages
-      await storage.clearMessages();
+      messages.length = 0;
       return res.json({ success: true });
     }
 
     return res.status(405).json({ message: 'Method not allowed' });
   } catch (error) {
     console.error('Messages API error:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error', error: String(error) });
+  }
+}
+
+async function generateAIResponse(query: string) {
+  try {
+    const systemPrompt = `You are an expert TallyPrime accounting software assistant. You help users with accounting queries and provide step-by-step guidance.
+
+Provide helpful, accurate information about TallyPrime features, shortcuts, and best practices. Format your response as clear, actionable advice.`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: query }
+      ],
+      temperature: 0.7,
+    });
+
+    const content = response.choices[0]?.message?.content || "I couldn't process your request. Please try again.";
+    
+    return {
+      content,
+      type: "text",
+      metadata: {
+        confidence: 0.8
+      }
+    };
+  } catch (error) {
+    console.error("OpenAI API error:", error);
+    return {
+      content: "I'm having trouble processing your request right now. Please try again later.",
+      type: "error",
+      metadata: { confidence: 0.1, error: String(error) }
+    };
   }
 }
