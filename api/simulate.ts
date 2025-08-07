@@ -1,8 +1,11 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import OpenAI from 'openai';
 
+// Create optimized OpenAI instance outside handler
 const openai = new OpenAI({ 
-  apiKey: process.env.OPENAI_API_KEY || "demo_key"
+  apiKey: process.env.OPENAI_API_KEY || "demo_key",
+  maxRetries: 1, // Reduce retries for faster response
+  timeout: 25 * 1000, // 25 second timeout (simulations are longer)
 });
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

@@ -3,7 +3,9 @@
   "outputDirectory": "dist/public",
   "functions": {
     "api/**/*.ts": {
-      "maxDuration": 30
+      "maxDuration": 25,
+      "memory": 1024,
+      "regions": ["iad1"]
     }
   },
   "rewrites": [

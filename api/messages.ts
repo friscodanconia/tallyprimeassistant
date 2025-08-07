@@ -1,11 +1,14 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import OpenAI from 'openai';
 
+// Create OpenAI instance outside handler for reuse
 const openai = new OpenAI({ 
-  apiKey: process.env.OPENAI_API_KEY || "demo_key"
+  apiKey: process.env.OPENAI_API_KEY || "demo_key",
+  maxRetries: 1, // Reduce retries for faster response
+  timeout: 20 * 1000, // 20 second timeout
 });
 
-// In-memory storage for demo
+// In-memory storage for demo (shared across function calls)
 const messages: any[] = [];
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
