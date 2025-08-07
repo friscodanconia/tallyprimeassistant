@@ -29,13 +29,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (req.method === 'POST') {
-      // Send a new message
-      const { content, type = 'text' } = req.body;
+      // Send a new message or add a direct message
+      const { content, type = 'text', role, metadata } = req.body;
       
       if (!content) {
         return res.status(400).json({ message: 'Content is required' });
       }
 
+      // If role is specified, add the message directly (e.g., for simulations)
+      if (role) {
+        const message = {
+          id: `msg-${Date.now()}-${role}`,
+          content,
+          role,
+          type,
+          createdAt: new Date(),
+          metadata: metadata || null
+        };
+        messages.push(message);
+        return res.json({ message });
+      }
+
+      // Otherwise, handle as a user message that needs AI response
       // Add user message
       const userMessage = {
         id: `msg-${Date.now()}-user`,

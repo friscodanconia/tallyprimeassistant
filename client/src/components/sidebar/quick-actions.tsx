@@ -24,10 +24,21 @@ export function QuickActions() {
 
   const simulateMutation = useMutation({
     mutationFn: async (action: string) => {
-      const response = await apiRequest("POST", "/api/simulate", { 
+      // Generate the simulation
+      const simulateResponse = await apiRequest("POST", "/api/simulate", { 
         action: action
       });
-      return response.json();
+      const simulation = await simulateResponse.json();
+      
+      // Add the simulation to chat messages via messages API
+      const messagesResponse = await apiRequest("POST", "/api/messages", {
+        content: simulation.content,
+        type: "simulation",
+        role: "assistant",
+        metadata: simulation.metadata
+      });
+      
+      return messagesResponse.json();
     },
     onSuccess: () => {
       // Invalidate queries to refresh the chat
@@ -44,6 +55,7 @@ export function QuickActions() {
       });
     },
     onError: (error: any) => {
+      console.error('Simulation error:', error);
       toast({
         title: "Error",
         description: "Failed to generate simulation. Please try again.",

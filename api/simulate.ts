@@ -8,6 +8,10 @@ const openai = new OpenAI({
   timeout: 25 * 1000, // 25 second timeout (simulations are longer)
 });
 
+// Import shared messages array from messages API
+// Note: In serverless, we need a shared storage solution
+// For now, we'll create a simple cross-function communication
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
