@@ -55,6 +55,8 @@ export type ChatResponse = {
     simulation?: string;
     faqMatch?: boolean;
     confidence?: number;
+    generated_by?: string;
+    error?: string;
   };
 };
 

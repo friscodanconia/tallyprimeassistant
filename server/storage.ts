@@ -444,6 +444,8 @@ export class MemStorage implements IStorage {
     const newMessage: Message = {
       id: randomUUID(),
       ...message,
+      metadata: message.metadata || null,
+      type: message.type || "text",
       createdAt: new Date()
     };
     this.messages.set(newMessage.id, newMessage);
@@ -538,6 +540,8 @@ export class MemStorage implements IStorage {
     const newFaqItem: FaqItem = {
       id: randomUUID(),
       ...faqItem,
+      keywords: faqItem.keywords || null,
+      steps: faqItem.steps || null,
       createdAt: new Date()
     };
     this.faqItems.set(newFaqItem.id, newFaqItem);
