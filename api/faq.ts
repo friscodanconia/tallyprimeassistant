@@ -1,5 +1,4 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { storage } from '../server/storage';
 
 // Sample FAQ data (fallback if storage fails)
 const faqData = [
@@ -105,26 +104,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const searchQuery = req.query.q || req.query.query || req.query.search;
       
       if (searchQuery && typeof searchQuery === 'string' && searchQuery.trim()) {
-        // Perform search
-        try {
-          // Try using storage service first
-          const searchResults = await storage.searchFaq(searchQuery.trim());
-          return res.json(searchResults);
-        } catch (error) {
-          console.error('Storage search failed, using fallback:', error);
-          // Fall back to simple search
-          const searchResults = fallbackSearch(searchQuery.trim());
-          return res.json(searchResults);
-        }
+        // Perform search using fallback search function
+        const searchResults = fallbackSearch(searchQuery.trim());
+        return res.json(searchResults);
       } else {
         // Return all FAQs if no search query
-        try {
-          const allFAQs = await storage.getFaqItems();
-          return res.json(allFAQs);
-        } catch (error) {
-          console.error('Storage failed, using fallback data:', error);
-          return res.json(faqData);
-        }
+        return res.json(faqData);
       }
     }
 
