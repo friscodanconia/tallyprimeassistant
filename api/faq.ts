@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { storage } from '../server/storage';
 
-// Sample FAQ data
+// Sample FAQ data (fallback if storage fails)
 const faqData = [
   {
     id: '1',
@@ -44,6 +45,49 @@ const faqData = [
   }
 ];
 
+function fallbackSearch(query: string) {
+  const queryLower = query.toLowerCase();
+  const results: Array<{ item: any; score: number }> = [];
+
+  for (const item of faqData) {
+    let score = 0;
+
+    // Exact question match gets highest score
+    if (item.question.toLowerCase().includes(queryLower)) {
+      score += 10;
+    }
+
+    // Keyword matches
+    if (item.keywords) {
+      for (const keyword of item.keywords) {
+        if (queryLower.includes(keyword.toLowerCase())) {
+          score += 5;
+        }
+      }
+    }
+
+    // Category match
+    if (item.category.toLowerCase().includes(queryLower)) {
+      score += 3;
+    }
+
+    // Answer content match
+    if (item.answer.toLowerCase().includes(queryLower)) {
+      score += 2;
+    }
+
+    if (score > 0) {
+      results.push({ item, score });
+    }
+  }
+
+  // Sort by score (highest first) and return top 10
+  return results
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 10)
+    .map(result => result.item);
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -57,7 +101,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     if (req.method === 'GET') {
-      return res.json(faqData);
+      // Check if search query is provided
+      const searchQuery = req.query.q || req.query.query || req.query.search;
+      
+      if (searchQuery && typeof searchQuery === 'string' && searchQuery.trim()) {
+        // Perform search
+        try {
+          // Try using storage service first
+          const searchResults = await storage.searchFaq(searchQuery.trim());
+          return res.json(searchResults);
+        } catch (error) {
+          console.error('Storage search failed, using fallback:', error);
+          // Fall back to simple search
+          const searchResults = fallbackSearch(searchQuery.trim());
+          return res.json(searchResults);
+        }
+      } else {
+        // Return all FAQs if no search query
+        try {
+          const allFAQs = await storage.getFaqItems();
+          return res.json(allFAQs);
+        } catch (error) {
+          console.error('Storage failed, using fallback data:', error);
+          return res.json(faqData);
+        }
+      }
     }
 
     return res.status(405).json({ message: 'Method not allowed' });
