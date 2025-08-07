@@ -1,7 +1,16 @@
 {
   "buildCommand": "npm run build:client",
   "outputDirectory": "dist/public",
+  "functions": {
+    "api/**/*.ts": {
+      "maxDuration": 25
+    }
+  },
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
