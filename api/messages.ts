@@ -1,9 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createStorage } from '../server/storage.js';
-import { OpenAIService } from '../server/services/openai.js';
-
-const storage = createStorage();
-const openai = new OpenAIService();
+import { storage } from '../server/storage.js';
+import { processUserQuery } from '../server/services/openai.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
@@ -32,17 +29,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
 
       // Add user message
-      const userMessage = await storage.addMessage({
+      const userMessage = await storage.createMessage({
         content,
         role: 'user',
         type,
       });
 
+      // Get FAQ results for context
+      const faqResults = await storage.searchFaq(content);
+      
       // Generate AI response
-      const aiResponse = await openai.generateResponse(content);
+      const aiResponse = await processUserQuery(content, faqResults);
       
       // Add AI message
-      const aiMessage = await storage.addMessage({
+      const aiMessage = await storage.createMessage({
         content: aiResponse.content,
         role: 'assistant',
         type: aiResponse.type || 'text',

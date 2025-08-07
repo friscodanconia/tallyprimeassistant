@@ -1,9 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createStorage } from '../server/storage.js';
-import { OpenAIService } from '../server/services/openai.js';
-
-const storage = createStorage();
-const openai = new OpenAIService();
+import { storage } from '../server/storage.js';
+import { generateTallySimulation } from '../server/services/openai.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
@@ -25,10 +22,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
 
       // Generate simulation response
-      const simulationResponse = await openai.generateSimulation(action);
+      const simulationResponse = await generateTallySimulation(action);
       
       // Add the simulation message to chat
-      const message = await storage.addMessage({
+      const message = await storage.createMessage({
         content: simulationResponse.content,
         role: 'assistant',
         type: 'simulation',

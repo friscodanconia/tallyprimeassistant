@@ -1,9 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createStorage } from '../../../server/storage.js';
-import { VectorSearchService } from '../../../server/services/vector-search.js';
-
-const storage = createStorage();
-const vectorSearch = new VectorSearchService();
+import { storage } from '../../../server/storage.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
@@ -38,11 +34,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.json([]);
       }
 
-      // Get all FAQs first
-      const allFaqs = await storage.getFaqItems();
-      
-      // Perform vector search
-      const searchResults = await vectorSearch.searchFAQs(query, allFaqs);
+      // Use storage's built-in search functionality
+      const searchResults = await storage.searchFaq(query);
       
       return res.json(searchResults);
     }
